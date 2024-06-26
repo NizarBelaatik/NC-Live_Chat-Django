@@ -30,10 +30,10 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class USER(AbstractBaseUser, PermissionsMixin):
-    user_id = models.CharField(max_length=255,blank=True, null=True)
+    
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=30, blank=True, null=True)
-
+    firstname = models.CharField(max_length=30, blank=True, null=True)
+    lastname = models.CharField(max_length=30, blank=True, null=True)
     num = models.CharField(max_length=30, blank=True, null=True)
     
     is_active = models.BooleanField(default=True)
@@ -45,16 +45,14 @@ class USER(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
     
+    user_id = models.CharField(max_length=255,blank=True, null=True)
     
-    
-    # Add any additional fields you need for your user model
-    # For example:
-    # profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['firstname','lastname']
 
     def __str__(self):
         return self.email

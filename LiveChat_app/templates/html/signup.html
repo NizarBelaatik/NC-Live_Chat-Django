@@ -36,7 +36,7 @@
             <div class="form signup">
                 <div class="form-content">
                     <header>Signup</header>
-                    <form action="#">
+                    <form action="#" novalidate>
                         <div class="field input-field">
                             <input type="email" placeholder="Email" class="input" name="email" required>
                         </div>
@@ -63,7 +63,7 @@
                     </form>
 
                     <div class="form-link">
-                        <span>Already have an account? <a href="#" class="link login-link">Login</a></span>
+                        <span>Already have an account? <a href="{% url 'login'%}" class="link login-link">Login</a></span>
                     </div>
                 </div>
 

@@ -19,13 +19,17 @@ from django.urls import path
 
 from django.conf import settings
 from django.conf.urls.static import static
-
-from LiveChat_app.views import  LoginU,SignUP
+from LiveChat_app.views import HOME
+from LiveChat_app.views import  LoginU,Login, SignUP,SignupU 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', LoginU),
-    path('registration/', SignUP),
+    path('login/', Login, name="login"),
+    path('LoginU/', LoginU, name="LoginU"),
+    path('signup/', SignUP ,name="signup"),
+    path('SignupU/', SignupU ,name="SignupU"),
+
+    path('home/', HOME ,name="home"),
 ]
 
 if settings.DEBUG:

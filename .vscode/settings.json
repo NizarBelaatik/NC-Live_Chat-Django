@@ -1,0 +1,6 @@
+{
+    "php.workspace.includePath": "",
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    }
+}

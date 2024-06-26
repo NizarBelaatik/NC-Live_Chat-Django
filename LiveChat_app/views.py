@@ -5,22 +5,30 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login , logout,update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from django.http import JsonResponse
 
 
 # Create your views here.
 
+def Login(request):
+    return render(request,'html/login.html')
 
 @csrf_protect
 def LoginU(request):
 
+
     if request.method == "POST":
-        usernameU =request.POST.get('username')
+        emailU =request.POST.get('email')
         passwordU =request.POST.get('password')
-        user = authenticate(username=usernameU,password=passwordU)
+        user = authenticate(username=emailU,password=passwordU)
         if user is not None:
             login(request,user)
-            return redirect("/")
-    return render(request,'html/login.html')
+            return JsonResponse({'status': 'successfull',
+                                 'code':300,
+                                 'redirect':'/home/'})
+        
+    return JsonResponse({'status': 'error',
+                        'code':400})
 
 @csrf_protect
 def SignupU(request):
@@ -62,12 +70,13 @@ def SignupU(request):
 @login_required
 def LogoutU(request):
     logout(request)
-    return redirect("main_page")
+    return redirect("home")
     #return render(request,'html/login.html')
 
-def home(request):
+@login_required
+def HOME(request):
 
-    return render(request,'html/login.html')
+    return render(request,'html/home.html')
 
 def SignUP(request):
 

@@ -9,6 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Responsive Login and Signup Form </title>
 
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
         <!-- Google Fonts -->
         <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -32,9 +34,10 @@
             <div class="form login">
                 <div class="form-content">
                     <header>Login</header>
-                    <form action="#">
+                    <form  method="POST" id="loginForm" >
+                      {% csrf_token %}
                       <div class="field input-field">
-                        <input type="email" placeholder="Email" class="input" name="email" required>
+                        <input type="email" placeholder="Email" class="input" name="email"  required>
                       </div>
 
                         <div class="field input-field">
@@ -47,12 +50,12 @@
                         </div>
 
                         <div class="field button-field">
-                            <button>Login</button>
+                            <button type="button" name="login">Login</button>
                         </div>
                     </form>
 
                     <div class="form-link">
-                        <span>Don't have an account? <a href="#" class="link signup-link">Signup</a></span>
+                        <span>Don't have an account? <a href="{% url 'signup'%}" class="link signup-link">Signup</a></span>
                     </div>
                 </div>
 
@@ -67,9 +70,11 @@
 
                 <div class="media-options">
                     <a href="#" class="field google">
-                        <img src="#" alt="" class="google-img">
+                      <i class='bx bxl-google google-icon'></i>
                         <span>Login with Google</span>
                     </a>
+
+                    
                 </div>
 
             </div>

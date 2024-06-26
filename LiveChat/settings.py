@@ -25,13 +25,14 @@ SECRET_KEY = 'django-insecure-@pil+-2=**uhs(o2xio0htiei0oy#&zj8cq4(7xw*3qso2$#if
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'LiveChat_app',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,6 +82,9 @@ DATABASES = {
     }
 }
 
+# AUTH USER
+AUTH_USER_MODEL = 'LiveChat_app.USER' 
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -106,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'GMT'
+TIME_ZONE = 'Africa/Casablanca'
 
 USE_I18N = True
 
@@ -117,7 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
-STATICFILES_DIRS = [BASE_DIR / 'ERapp/static',#"ERapp/static",
+STATICFILES_DIRS = [BASE_DIR / 'LiveChat_app/static',#"LiveChat_app/static",
                     BASE_DIR / "media"]
 
 MEDIA_ROOT = BASE_DIR / "media"

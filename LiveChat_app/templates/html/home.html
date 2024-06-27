@@ -1,5 +1,6 @@
 {% load static %}
 {% load costum_tags %}
+{% load humanize %}
 
 <html lang="en">
 <head>
@@ -62,6 +63,19 @@
         <div class="wrapper">
 
           <div class="conversation-area">
+
+            {% for chats in chats_data %}
+            <div class="msg active online">
+              <img class="msg-profile" src="{{ chats.img.url }}" alt="" />
+              <div class="msg-detail">
+                <div class="msg-username">{% if not grp %} {% for user_title in chats.chats_users_as_list %} {% if not user_title == user.email %}{{user_title}}{% endif %} {% endfor %}{% endif %}</div>
+                <div class="msg-content">
+                <span class="msg-message">{{chats.last_msg}}</span>
+                <span class="msg-date">{{chats.last_msg_time|timesince}}</span>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
             <div class="msg active online">
             <img class="msg-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%281%29.png" alt="" />
             <div class="msg-detail">
@@ -72,6 +86,7 @@
               </div>
             </div>
             </div>
+
             <div class="msg ">
             <img class="msg-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%2812%29.png" alt="" />
             <div class="msg-detail">
@@ -100,33 +115,7 @@
 
             <div class="chat-area-main" style="display:flex;flex-direction: column; flex-direction: column-reverse;overflow: auto; ">
               <div style="">
-                <div class="chat-msg">
-                  <div class="chat-msg-profile">
-                  <img class="chat-msg-img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%283%29+%281%29.png" alt="" />
-                  <div class="chat-msg-date">Message seen 1.22pm</div>
-                  </div>
-  
-                  <div class="chat-msg-content">
-                  <div class="chat-msg-text">Luctus et ultrices posuere cubilia curae.</div>
-                  <div class="chat-msg-text">
-                    <img src="https://media0.giphy.com/media/yYSSBtDgbbRzq/giphy.gif?cid=ecf05e47344fb5d835f832a976d1007c241548cc4eea4e7e&rid=giphy.gif" /></div>
-                  <div class="chat-msg-text">Neque gravida in fermentum et sollicitudin ac orci phasellus egestas. Pretium lectus quam id leo.</div>
-                  </div>
-                  
-                  
-                  
-                </div>
-  
-                <div class="chat-msg owner">
-                  <div class="chat-msg-profile">
-                  <img class="chat-msg-img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%281%29.png" alt="" />
-                  <div class="chat-msg-date">Message seen 1.22pm</div>
-                  </div>
-                  <div class="chat-msg-content">
-                  <div class="chat-msg-text">Sit amet risus nullam eget felis eget. Dolor sed viverra ipsum😂😂😂</div>
-                  <div class="chat-msg-text">Cras mollis nec arcu malesuada tincidunt.</div>
-                  </div>
-                </div>
+
   
                 {% for chat in chat_msg_data %}
                   

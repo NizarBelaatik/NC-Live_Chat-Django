@@ -71,7 +71,10 @@
                 <div class="msg-username">{% if not grp %} {% for user_title in chats.chats_users_as_list %} {% if not user_title == user.email %}{{user_title}}{% endif %} {% endfor %}{% endif %}</div>
                 <div class="msg-content">
                 <span class="msg-message">{{chats.last_msg}}</span>
-                <span class="msg-date">{{chats.last_msg_time|timesince}}</span>
+                <span class="msg-date">{{chats.last_msg_time|timesince}}
+                  ||||||||{{ chats.last_msg_time|custom_timesince  }}
+                |||{{ chats.last_msg_time|timesince|custom_timesince_2  }}
+                </span>
                 </div>
               </div>
             </div>

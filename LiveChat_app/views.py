@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.http import JsonResponse
 
-
+from .models import chat_msg ,chat_file
 # Create your views here.
 
 def Login(request):
@@ -75,8 +75,9 @@ def LogoutU(request):
 
 @login_required
 def HOME(request):
-
-    return render(request,'html/home.html')
+    chat_msg_data = chat_msg.objects.all()
+    #chat_msg_data+=[{'chat_msg_data':chat_msg_data,}]
+    return render(request,'html/home.html',{'chat_msg_data':chat_msg_data})
 
 def SignUP(request):
 

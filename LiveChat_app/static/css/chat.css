@@ -81,6 +81,10 @@ body {
   background-color: var(--body-bg-color);
   font-family: var(--body-font);
   color: var(--body-color);
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 html {
   box-sizing: border-box;
@@ -91,9 +95,10 @@ html {
   flex-direction: column;
   background-color: var(--theme-bg-color);
   max-width: 1600px;
-  height: 100vh;
-  margin: 0 auto;
+  height: 100%;
+  margin: 20px auto;
   overflow: hidden;
+  
 }
 .header {
   height: 80px;
@@ -297,7 +302,7 @@ html {
 .chat-area {
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden;
 }
 .chat-area-header {
   display: flex;
@@ -334,6 +339,7 @@ html {
   margin-top: auto;
   margin-bottom: -20px;
   position: relative;
+  width:40px;
 }
 .chat-msg-date {
   position: absolute;

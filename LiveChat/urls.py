@@ -24,6 +24,7 @@ from LiveChat_app.views import  LoginU,Login, SignUP,SignupU
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', HOME),
     path('login/', Login, name="login"),
     path('LoginU/', LoginU, name="LoginU"),
     path('signup/', SignUP ,name="signup"),

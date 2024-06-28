@@ -9,11 +9,16 @@ chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
     const message = data['message'];
     const userProfilePic = data['userProfilePic'];
-
-    console.log('good 2');
+    const email_sender = data['email'];
     document.querySelector("#text_input").value = "";
+    var owner_chat ="";
+    console.log('email_sender',email_sender);
+    console.log('USER_email',USER_email);
+    if(email_sender == USER_email){
+        owner_chat="owner";
+    }
     var newMessage = `
-        <div class="chat-msg ">
+        <div class="chat-msg ${owner_chat}">
             <div class="chat-msg-profile">
                 <img class="chat-msg-img" src="${userProfilePic}" alt="">
                 <div class="chat-msg-date">just now</div>

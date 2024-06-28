@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login , logout,update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.http import JsonResponse
+from django.core import serializers
 
 from .models import chats,chat_msg ,chat_file
 # Create your views here.
@@ -23,7 +24,7 @@ def LoginU(request):
         user = authenticate(username=emailU,password=passwordU)
         if user is not None:
             login(request,user)
-            return JsonResponse({'status': 'successfull',
+            return JsonResponse({'status': 'redirection',
                                  'code':300,
                                  'redirect':'/home/'})
         
@@ -80,6 +81,59 @@ def HOME(request):
     #chat_msg_data+=[{'chat_msg_data':chat_msg_data,}]
     return render(request,'html/home.html',{'chat_msg_data':chat_msg_data,
                                             'chats_data':chats_data,})
+
+@login_required
+def open_conv(request):
+    user_L=request.user
+    if request.method == "GET":
+        USER_email =request.GET.get('USER_email')
+        chat_box_id =request.GET.get('chat_box_id')
+        
+        
+
+
+        try:
+            
+            chats_data = chats.objects.get(chat_box_id=chat_box_id)
+            check_user = getattr(chats_data,'chats_users')
+            if(user_L.email in check_user or user_L.email in check_user.split()):
+                
+                chat_msg_D = chat_msg.objects.filter(chat_box_id=chat_box_id)
+                #chat_msg_data = serializers.serialize('json', chat_msg_data)
+                chat_msg_data=[]
+                for cmd in chat_msg_D:
+                    file = cmd.file.url if cmd.file else " "
+                    print("\nfile",file)
+                    chat_msg_data+=[{
+                        'chat_msg_id':cmd.chat_msg_id,
+                        'chat_box_id':cmd.chat_box_id,
+                        'user':cmd.user,
+                        'chat_date':cmd.chat_date,
+                        'contain_txt':cmd.contain_txt,
+                        'chat':cmd.chat,
+                        'contain_file':cmd.contain_file,
+                        'file_type':cmd.file_type,
+
+                        'file_url': file ,
+                        'contain_files':cmd.contain_files,
+                        'files_id':cmd.files_id,
+                        
+                    },]
+
+                return JsonResponse({'status': 'success',
+                        'code':201,
+                        'description':'',
+                        'chat_msg_data':chat_msg_data}, safe=False)
+        except:
+            return JsonResponse({'status': 'error',
+                        'code':403,
+                        'description':'Access denied! User not found'}, safe=False)
+
+
+        
+    return JsonResponse({'status': 'error',
+                        'code':400})
+
 
 def SignUP(request):
 

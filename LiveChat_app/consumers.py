@@ -65,7 +65,7 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
 
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")
-
+        print('email',email)
         await self.channel_layer.group_send(
                 self.roomGroupName,{
                     "type" : "sendMessage" ,
@@ -80,6 +80,7 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
         #userProfilePic = event["userProfilePic"]
         message = event["message"]
 
+       
 
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")

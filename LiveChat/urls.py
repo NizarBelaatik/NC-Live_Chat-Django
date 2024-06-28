@@ -19,7 +19,7 @@ from django.urls import path
 
 from django.conf import settings
 from django.conf.urls.static import static
-from LiveChat_app.views import HOME
+from LiveChat_app.views import HOME ,open_conv
 from LiveChat_app.views import  LoginU,Login, SignUP,SignupU 
 
 urlpatterns = [
@@ -31,6 +31,8 @@ urlpatterns = [
     path('SignupU/', SignupU ,name="SignupU"),
 
     path('home/', HOME ,name="home"),
+
+    path('open-conv/',open_conv,name="open-conv"),
 ]
 
 if settings.DEBUG:

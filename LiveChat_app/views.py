@@ -86,14 +86,9 @@ def HOME(request):
 def open_conv(request):
     user_L=request.user
     if request.method == "GET":
-        USER_email =request.GET.get('USER_email')
         chat_box_id =request.GET.get('chat_box_id')
-        
-        
-
 
         try:
-            
             chats_data = chats.objects.get(chat_box_id=chat_box_id)
             check_user = getattr(chats_data,'chats_users')
             if(user_L.email in check_user or user_L.email in check_user.split()):
@@ -103,7 +98,7 @@ def open_conv(request):
                 chat_msg_data=[]
                 for cmd in chat_msg_D:
                     file = cmd.file.url if cmd.file else " "
-                    print("\nfile",file)
+                    
                     chat_msg_data+=[{
                         'chat_msg_id':cmd.chat_msg_id,
                         'chat_box_id':cmd.chat_box_id,
@@ -120,10 +115,33 @@ def open_conv(request):
                         
                     },]
 
+
+                cd = [{
+                        'chat_box_id':chats_data.chat_box_id,
+                        'title':chats_data.title,
+                        'chats_users':chats_data.chats_users,
+                        'img':chats_data.img.url,
+                        'grp':chats_data.grp,
+                        'last_msg':chats_data.last_msg,
+                        'last_msg_time':chats_data.last_msg_time,
+                    }]
+
+                print(cd)
+
                 return JsonResponse({'status': 'success',
                         'code':201,
                         'description':'',
-                        'chat_msg_data':chat_msg_data}, safe=False)
+                        'chat_msg_data':chat_msg_data,
+                        'cd':cd,
+                        
+                        'chat_box_id':chats_data.chat_box_id,
+                        'title':chats_data.title,
+                        'chats_users':chats_data.chats_users,
+                        'img':chats_data.img.url,
+                        'grp':chats_data.grp,
+                        'last_msg':chats_data.last_msg,
+                        'last_msg_time':chats_data.last_msg_time,
+                    }, safe=False)
         except:
             return JsonResponse({'status': 'error',
                         'code':403,

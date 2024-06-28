@@ -110,20 +110,21 @@
 
 
           <div class="chat-area" style="">
-            <div class="" style="display:non;">
-              <div class="chat-area-header">
-              <div class="chat-area-title">CodePen Group</div>
-              <div class="chat-area-group">
-                <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%283%29+%281%29.png" alt="" />
-                <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%282%29.png" alt="">
-                <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%2812%29.png" alt="" />
-                <span>+4</span>
-              </div>
+            <div class="chat-area" style="display:non;">
+              <div class="chat-area-header" id="chat_header_area_id">
+                <div class="chat-area-title">CodePen Grouvp</div>
+                <div class="chat-area-group">
+                  <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%283%29+%281%29.png" alt="" />
+                  <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%282%29.png" alt="">
+                  <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%2812%29.png" alt="" />
+                  <span>+4</span>
+                </div>
               </div>
 
 
-              <div class="chat-area-main" style="display:flex;flex-direction: column; flex-direction: column-reverse;overflow: auto; ">
-                <div id="chat_main_area_id">
+              <div class="chat-area-main" id="chat_main_area_id" style="overflow-y: auto; height:100%!important; width: 100%!important; ">
+                <!--display:flex;flex-direction: column; flex-direction: column-reverse;overflow: auto; -->
+                
 
     
                   {% for chat in chat_msg_data %}
@@ -179,7 +180,6 @@
                         
                     </div>
                   {% endfor %}
-                </div>
                 
 
 

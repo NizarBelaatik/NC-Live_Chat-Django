@@ -303,6 +303,7 @@ html {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  
 }
 .chat-area-header {
   display: flex;
@@ -327,6 +328,8 @@ html {
 }
 .chat-area-main {
   flex-grow: 1;
+  
+
 }
 .chat-msg-img {
   height: 40px;

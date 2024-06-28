@@ -34,10 +34,10 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'LiveChat_app',
+    'daphne',
+    'channels',
 
-    #'channels',
-
-     'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -76,6 +76,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'LiveChat.wsgi.application'
+
+# Channels
+ASGI_APPLICATION = 'LiveChat.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        
+    },
+}
 
 
 # Database

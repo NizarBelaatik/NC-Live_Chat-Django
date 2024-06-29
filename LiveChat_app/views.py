@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.http import JsonResponse
 from django.core import serializers
-
+from .models import USER
 from .models import chats,chat_msg ,chat_file
 # Create your views here.
 
@@ -98,7 +98,9 @@ def open_conv(request):
                 chat_msg_data=[]
                 for cmd in chat_msg_D:
                     file = cmd.file.url if cmd.file else " "
-                    
+                    sender_profile = USER.objects.get(email=cmd.user)
+                    sender_profile_pic = getattr(sender_profile,'profile_pic')
+                    print('sender_profile_pic.url',sender_profile_pic.url)
                     chat_msg_data+=[{
                         'chat_msg_id':cmd.chat_msg_id,
                         'chat_box_id':cmd.chat_box_id,
@@ -112,11 +114,12 @@ def open_conv(request):
                         'file_url': file ,
                         'contain_files':cmd.contain_files,
                         'files_id':cmd.files_id,
-                        
+
+                        'sender_profile_pic':(sender_profile_pic.url),
                     },]
 
 
-                cd = [{
+                cd = {
                         'chat_box_id':chats_data.chat_box_id,
                         'title':chats_data.title,
                         'chats_users':chats_data.chats_users,
@@ -124,23 +127,18 @@ def open_conv(request):
                         'grp':chats_data.grp,
                         'last_msg':chats_data.last_msg,
                         'last_msg_time':chats_data.last_msg_time,
-                    }]
+                    }
 
-                print(cd)
+                title=chats_data.title
+                print(title)
 
                 return JsonResponse({'status': 'success',
                         'code':201,
                         'description':'',
                         'chat_msg_data':chat_msg_data,
                         'cd':cd,
-                        
+                        'title':title,
                         'chat_box_id':chats_data.chat_box_id,
-                        'title':chats_data.title,
-                        'chats_users':chats_data.chats_users,
-                        'img':chats_data.img.url,
-                        'grp':chats_data.grp,
-                        'last_msg':chats_data.last_msg,
-                        'last_msg_time':chats_data.last_msg_time,
                     }, safe=False)
         except:
             return JsonResponse({'status': 'error',

@@ -73,7 +73,7 @@ class chats(models.Model):
 class chat_msg(models.Model):
     chat_msg_id = models.CharField(max_length=30, blank=True, null=True) # 
     chat_box_id = models.CharField(max_length=30, blank=True, null=True) # convertion id
-    user = models.CharField(max_length=30, blank=True, null=True)
+    user = models.CharField(max_length=30, blank=True, null=True) # email
     chat_date = models.DateTimeField(default=timezone.now)
 
     contain_txt = models.BooleanField(default=False)

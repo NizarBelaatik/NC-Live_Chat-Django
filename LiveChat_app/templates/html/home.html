@@ -112,80 +112,14 @@
           <div class="chat-area" style="">
             <div class="chat-area" style="display:non;">
               <div class="chat-area-header" id="chat_header_area_id">
-                <div class="chat-area-title">CodePen Grouvp</div>
-                <div class="chat-area-group">
-                  <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%283%29+%281%29.png" alt="" />
-                  <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%282%29.png" alt="">
-                  <img class="chat-area-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%2812%29.png" alt="" />
-                  <span>+4</span>
-                </div>
+
               </div>
-
-
               <div class="chat-area-main" id="chat_main_area_id" style="overflow-y: auto; height:100%!important; width: 100%!important; ">
-                <!--display:flex;flex-direction: column; flex-direction: column-reverse;overflow: auto; -->
-                
-
-    
-                  {% for chat in chat_msg_data %}
-                    
-                    <div class="chat-msg {% if user.email == chat.user %} owner {% endif %}">
-
-                      
-                      {% if not user.email == chat.user %}
-                        {% if not forloop.last %}
-                          {% with next_item=chat_msg_data|next_elem_in_for:forloop.counter0 %}
-                              {% if not next_item.user == chat.user %}
-                                  <div class="chat-msg-profile">
-                                    <img class="chat-msg-img" src="{% if not user.profile_pic.url == null %}{{ user.profile_pic }}{% endif %}" alt="" />
-                                    <div class="chat-msg-date">{{ chat.chat_date }}</div>
-                                  </div>
-                              {% else %}
-                                <div class="chat-msg-profile">
-                                  <div class="chat-msg-date">{{ chat.chat_date }}</div>
-                                </div>
-                              {% endif %}
-                          {% endwith %}
-                        {% else %}
-                          <div class="chat-msg-profile">
-                            <img class="chat-msg-img" src="{{ user.profile_pic.url }}" alt="" />
-                            <div class="chat-msg-date">{{ chat.chat_date }}</div>
-                          </div>
-                        {% endif %}
-                      {% endif %}
-                      <div class="chat-msg-content">
-                        
-                        {% if chat.contain_file %}
-                          <div class="chat-msg-text">
-                            
-
-                            {% if chat.file_type == "excel" %}
-                              <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-excel-2-line fp_icon" ></i></a>
-                            {% elif chat.file_type == "pdf" %}
-                              <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-pdf fp_icon" ></i></a>
-                            {% elif chat.file_type == "img" %}
-                              <a class="nav-link nav-icon show" href="{{ chat.file.url }}" download><img src="{{  chat.file.url }}" alt="Image" ></a>
-                            {% elif chat.file_type == "word" %}
-                              <a class="nav-link nav-icon show" href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-word fp_icon" ></i></a>
-                            {% else %}
-                              <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-line fp_icon" ></i></a>
-                            {% endif %}
-
-                          </div>
-                        {% endif %}
-                        <div class="chat-msg-text">{{ chat.chat }}</div>
-                      </div>
-                        
-                        
-                        
-                    </div>
-                  {% endfor %}
-                
-
-
-
-                
+                              
               </div>
+
+
+
               <!--<form method="POST" class="" style="display:flex;width:100%;margin:0;padding:0%;" >
                   {% csrf_token %} -->
               <div class="chat-area-footer">
@@ -222,7 +156,7 @@
             </div>
           </div>
 
-          <div class="detail-area">
+          <div class="detail-area " >
             <div class="detail-area-header">
             <div class="msg-profile group">
               <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">

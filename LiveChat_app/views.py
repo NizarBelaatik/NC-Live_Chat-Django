@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.shortcuts import redirect , get_object_or_404
 
 from django.contrib.auth.models import User
@@ -79,6 +80,14 @@ def LogoutU(request):
     return redirect("home")
     #return render(request,'html/login.html')
 
+def Get_Other_User_Email(user_L,chats_users):
+    other_user_email =''
+    if  user_L.email in chats_users.split():
+        for chats__users in chats_users.split():
+            if not chats__users == user_L.email:
+                other_user_email = chats__users
+    return other_user_email
+
 @login_required
 def HOME(request):
     user_L=request.user
@@ -89,12 +98,8 @@ def HOME(request):
     for cd in chats_data:
         chats_users= cd.chats_users
 
-        other_user_email=''
-        if  user_L.email in chats_users.split():
-            for chats__users in chats_users.split():
-                if not chats__users == user_L.email:
-
-                    other_user_email = chats__users
+        other_user_email=Get_Other_User_Email(user_L,chats_users)
+        
             
 
 
@@ -140,7 +145,6 @@ def open_conv(request):
     user_L=request.user
     if request.method == "GET":
         chat_box_id =request.GET.get('chat_box_id')
-
         try:
             chats_data = chats.objects.get(chat_box_id=chat_box_id)
             check_user = getattr(chats_data,'chats_users')
@@ -223,6 +227,54 @@ def open_conv(request):
                         'code':400})
 
 
+@login_required
+def load_details_area(request):
+    user_L=request.user
+
+        
+    if request.method == "GET": #request.is_ajax():
+        chat_box_id =request.GET.get('chat_box_id')
+        try:
+
+            
+            chats_data = chats.objects.get(chat_box_id=chat_box_id)
+            check_user = getattr(chats_data,'chats_users')
+            if(user_L.email in check_user or user_L.email in check_user.split()):
+                
+                if not chats_data.grp :
+                    try:
+                        other_user_email=Get_Other_User_Email(user_L,check_user)
+                        other_user_data = USER.objects.get(email=other_user_email)
+
+                        img = getattr(other_user_data,'profile_pic')
+                        firstname = getattr(other_user_data,'firstname')
+                        lastname = getattr(other_user_data,'lastname')
+                        username = getattr(other_user_data,'username')
+                        title=username
+                    except:
+                        img = ''
+                        title =''
+                else:
+                    img =chats_data.img
+                    title=chats_data.title
+        
+                html = render_to_string('html/details_area.html', {
+                            'chats_users':chats_data.chats_users,
+                            'img':img,
+                            'title':title,})
+                
+
+                return JsonResponse({
+                        'code':201,
+                        'description':'',
+                        'html': html})
+        except:
+            return JsonResponse({'status': 'error',
+                        'code':403,
+                        'description':'Access denied! User not found'}, safe=False)
+        
+    return JsonResponse({'status': 'error',
+                        'code':400})
 
 
 def custom_timesince(value):

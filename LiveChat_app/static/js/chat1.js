@@ -110,7 +110,7 @@ function renderChatMessages(data,cd,box_ID) {
                 <img class="msg-profile" src="${cd.img}" alt="" />
                 <div class="chat-area-title">${cd.title}</div>
                 <div class="chat-area-group">
-                    <a onclick="open_details_area('${box_ID}')"><i class="bx bx-cog bx-md"></i></a>
+                    <a class="cursor_pointer" onclick="open_details_area('${box_ID}')"><i class="bx bx-cog bx-md"></i></a>
                 </div>
             </div>
             <div class="chat-area-main" id="chat_main_area_id" style="overflow-y: auto;display: flex;flex-direction: column;overflow-y: auto; height:100%!important; width: 100%!important; flex-direction: column-reverse;">
@@ -159,7 +159,26 @@ function renderChatMessages(data,cd,box_ID) {
 }
 
 
-
+function open_details_area(box_ID){
+    console.log('box_ID 1 ',box_ID);
+    $.ajax({
+        url: "/load-details-area/",
+        type: "GET",
+        data:{'chat_box_id':box_ID},
+        dataType: "json",
+        success: function(data){
+            $('#detail-area').css('display','block');
+            $('#detail-area').html(data.html);
+            
+            console.log('code 3 ',data.code);
+            console.log('code 3 ',data.html);
+        },
+        error: function(data){// (xhr, status, error){
+            console.error("Error: " + data.code+ " | " + data.description);
+        }
+    });
+    console.log('box_ID 2 ',box_ID);
+}
 
 function add_conv(){
     

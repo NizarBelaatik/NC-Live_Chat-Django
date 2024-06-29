@@ -60,10 +60,11 @@ class USER(AbstractBaseUser, PermissionsMixin):
 
 class chats(models.Model):
     chat_box_id = models.CharField(max_length=30, blank=True, null=True) # convertion id
-    title = models.CharField(max_length=100, blank=True, null=True)
     chats_users = models.TextField(blank=True)
-    img = models.ImageField(blank=True, upload_to='uploads/chats_img', null=True)
+    
     grp = models.BooleanField(default=False)
+    title = models.CharField(max_length=100, blank=True, null=True)
+    img = models.ImageField(blank=True, upload_to='uploads/chats_img', null=True)
     last_msg = models.TextField(blank=True)
     last_msg_time = models.DateTimeField(blank=True, null=True)
     

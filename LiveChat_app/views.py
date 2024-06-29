@@ -76,11 +76,51 @@ def LogoutU(request):
 
 @login_required
 def HOME(request):
+    user_L=request.user
     chat_msg_data = chat_msg.objects.all()
     chats_data = chats.objects.all()
+
+    Chats_Data=[]
+    for cd in chats_data:
+        chats_users= cd.chats_users
+
+        other_user_email=''
+        if  user_L.email in chats_users.split():
+            for chats__users in chats_users.split():
+                if not chats__users == user_L.email:
+
+                    other_user_email = chats__users
+            
+
+
+        if not cd.grp :
+            try:
+                other_user_data = USER.objects.get(email=other_user_email)
+                img = getattr(other_user_data,'profile_pic')
+                firstname = getattr(other_user_data,'firstname')
+                lastname = getattr(other_user_data,'lastname')
+                title=f'{firstname} {lastname}'
+            except:
+                img = ''
+                title =''
+        else:
+            img =cd.img
+            title=cd.title
+
+        Chats_Data+=[{
+                'chat_box_id':cd.chat_box_id,
+                'title':title,
+                'chats_users':cd.chats_users,
+                'img':img,
+                'grp':cd.grp,
+                'last_msg':cd.last_msg,
+                'last_msg_time':cd.last_msg_time,
+            }]
+        
+
     #chat_msg_data+=[{'chat_msg_data':chat_msg_data,}]
     return render(request,'html/home.html',{'chat_msg_data':chat_msg_data,
-                                            'chats_data':chats_data,})
+                                            'chats_data':Chats_Data,})
 
 @login_required
 def open_conv(request):
@@ -93,10 +133,10 @@ def open_conv(request):
             check_user = getattr(chats_data,'chats_users')
             if(user_L.email in check_user or user_L.email in check_user.split()):
                 
-                chat_msg_D = chat_msg.objects.filter(chat_box_id=chat_box_id)
+                chat_msg_D = chat_msg.objects.filter(chat_box_id=chat_box_id).order_by('chat_date')
                 #chat_msg_data = serializers.serialize('json', chat_msg_data)
                 chat_msg_data=[]
-                for cmd in chat_msg_D:
+                for cmd in   reversed(chat_msg_D) :
                     file = cmd.file.url if cmd.file else " "
                     sender_profile = USER.objects.get(email=cmd.user)
                     sender_profile_pic = getattr(sender_profile,'profile_pic')
@@ -119,25 +159,42 @@ def open_conv(request):
                     },]
 
 
+
+                other_user_email=''
+                for chats__users in check_user.split():
+                    if not chats__users == user_L.email:
+                        other_user_email = chats__users
+
+                if not chats_data.grp :
+                    try:
+                        other_user_data = USER.objects.get(email=other_user_email)
+                        img = getattr(other_user_data,'profile_pic')
+                        firstname = getattr(other_user_data,'firstname')
+                        lastname = getattr(other_user_data,'lastname')
+                        title=f'{firstname} {lastname}'
+                    except:
+                        img = ''
+                        title =''
+                else:
+                    img =chats_data.img
+                    title=chats_data.title
+
                 cd = {
                         'chat_box_id':chats_data.chat_box_id,
-                        'title':chats_data.title,
+                        'title':title,
                         'chats_users':chats_data.chats_users,
-                        'img':chats_data.img.url,
+                        'img':img.url,
                         'grp':chats_data.grp,
                         'last_msg':chats_data.last_msg,
                         'last_msg_time':chats_data.last_msg_time,
                     }
 
-                title=chats_data.title
-                print(title)
 
                 return JsonResponse({'status': 'success',
                         'code':201,
                         'description':'',
                         'chat_msg_data':chat_msg_data,
                         'cd':cd,
-                        'title':title,
                         'chat_box_id':chats_data.chat_box_id,
                     }, safe=False)
         except:

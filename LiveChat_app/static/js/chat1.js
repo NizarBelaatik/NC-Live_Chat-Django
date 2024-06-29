@@ -1,6 +1,12 @@
 function open_conv(chat_box_id,elem){
     const chat_area = document.querySelector('.chat-area');
     
+    var chatMainArea = $('#chat_main_area_id');
+    var chatHeaderArea = $('#chat_header_area_id');
+
+    chatMainArea.empty();  // Clear existing messages
+    chatHeaderArea.empty();
+
     var all_elem_with_active=document.querySelectorAll('.msg');
     all_elem_with_active.forEach(function(aewa){
         if(aewa.classList.contains('active')){
@@ -42,7 +48,7 @@ function renderChatMessages(data,cd) {
     const chat_area = document.querySelector('.chat-area');
 
     chatMainArea.empty();  // Clear existing messages
-
+    chatHeaderArea.empty();
 
     data.forEach(function(item) {
         //console.log('chat.sender_profile_pic',chat.sender_profile_pic);
@@ -84,9 +90,9 @@ function renderChatMessages(data,cd) {
             fileHtml = '<div class="chat-msg-text"><a class="nav-link nav-icon show" href="' + chat.file_url + '" download>' + fileIcon + '</a></div>';
         }
 
-        
+
         var chatHtml = `
-            <div class="chat-msg ${ownerClass}">
+            <div class="chat-msg ${ownerClass}" >
                 ${chat_msg_profile}
 
                 <div class="chat-msg-content">
@@ -98,8 +104,11 @@ function renderChatMessages(data,cd) {
 
         chatMainArea.append(chatHtml);
 
+        chatMainArea.scrollTop = chatMainArea.scrollHeight;
 
-        
+        const chatContent = document.getElementById('chat_main_area_id');
+        chatContent.scrollTop = chatContent.scrollHeight;
+
     });
     
     //var chats_data = data.cd[0];

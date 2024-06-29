@@ -96,7 +96,9 @@ html {
   background-color: var(--theme-bg-color);
   max-width: 1600px;
   height: 100%;
-  margin: 20px auto;
+  width: 100%;
+  margin: auto;
+  
   overflow: hidden;
   
 }
@@ -125,6 +127,11 @@ html {
   display: flex;
   flex-direction: column;
   overflow: auto;
+
+  /* new edit*/
+  overflow-x: hidden;
+  width: 500px;
+
 }
 .chat-area {
   flex-grow: 1;

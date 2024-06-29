@@ -59,10 +59,11 @@ class USER(AbstractBaseUser, PermissionsMixin):
         return self.email
     
 
-class chats(models.Model):
+class Chats_BOX(models.Model):
     chat_box_id = models.CharField(max_length=30, blank=True, null=True) # convertion id
     chats_users = models.TextField(blank=True)
-
+    box_created_date = models.DateTimeField(default=timezone.now)
+    
     grp = models.BooleanField(default=False)
     title = models.CharField(max_length=100, blank=True, null=True)
     img = models.ImageField(blank=True, upload_to='uploads/chats_img', null=True)
@@ -89,6 +90,7 @@ class chat_msg(models.Model):
     files_id = models.CharField(max_length=30, blank=True, null=True)
 
 class chat_file(models.Model):
+    chat_box_id = models.CharField(max_length=30, blank=True, null=True) # convertion id
     chat_file_id = models.CharField(max_length=30, blank=True, null=True)
     files_id = models.CharField(max_length=30, blank=True, null=True)
     file = models.ImageField(blank=True, upload_to='uploads/chat_files', null=True)

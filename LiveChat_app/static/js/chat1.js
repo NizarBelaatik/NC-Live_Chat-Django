@@ -160,7 +160,6 @@ function renderChatMessages(data,cd,box_ID) {
 
 
 function open_details_area(box_ID){
-    console.log('box_ID 1 ',box_ID);
     $.ajax({
         url: "/load-details-area/",
         type: "GET",
@@ -170,14 +169,11 @@ function open_details_area(box_ID){
             $('#detail-area').css('display','block');
             $('#detail-area').html(data.html);
             
-            console.log('code 3 ',data.code);
-            console.log('code 3 ',data.html);
         },
         error: function(data){// (xhr, status, error){
             console.error("Error: " + data.code+ " | " + data.description);
         }
     });
-    console.log('box_ID 2 ',box_ID);
 }
 function close_details_area(){
     $('#detail-area').html('');

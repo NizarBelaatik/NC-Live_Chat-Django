@@ -5,7 +5,7 @@ from channels.db import database_sync_to_async
 
 from django.contrib.auth.models import User
 from .models import USER
-from .models import  chats,chat_msg,chat_file
+from .models import  Chats_BOX,chat_msg,chat_file
 
 from django.shortcuts import get_object_or_404
 
@@ -65,7 +65,7 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
 
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")
-        print('email',email)
+
         await self.channel_layer.group_send(
                 self.roomGroupName,{
                     "type" : "sendMessage" ,

@@ -38,7 +38,12 @@
 
     <script>
       const USER_email ="{{user.email}}";
-      var userProfilePic = "{{user.profile_pic.url}}";
+      {% if user.profile_pic %}
+        var userProfilePic = "{{user.profile_pic.url}}";
+      {% else %}
+        var userProfilePic = "";
+      {% endif %}
+      
     </script>
 </head>
 <body>

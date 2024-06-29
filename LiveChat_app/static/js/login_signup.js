@@ -23,7 +23,6 @@ pwShowHide.forEach(eyeIcon => {
 const login_btn=document.querySelector("button[name='login']");
 login_btn.addEventListener("click", ()=>{
 //$("#loginForm").submit(function(){
-    console.log('submited');
     var csrfToken =$("[name=csrfmiddlewaretoken]").val();
     var email = $("[name=email]").val();
     var password = $("[name=password]").val();
@@ -45,9 +44,7 @@ login_btn.addEventListener("click", ()=>{
         contentType: false,
 
         success: function(data) {
-            console.log('code',data.code);
             if(data.code == 300){
-                console.log('redirect',data.redirect);
                 window.location.href=data.redirect;
             }
         }

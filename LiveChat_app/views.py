@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.http import JsonResponse
 from django.core import serializers
 from .models import USER
-from .models import chats,chat_msg ,chat_file
+from .models import Chats_BOX,chat_msg ,chat_file
 
 from django.utils import timezone
 from datetime import datetime
@@ -92,7 +92,7 @@ def Get_Other_User_Email(user_L,chats_users):
 def HOME(request):
     user_L=request.user
     chat_msg_data = chat_msg.objects.all()
-    chats_data = chats.objects.all()
+    chats_data = Chats_BOX.objects.all()
 
     Chats_Data=[]
     for cd in chats_data:
@@ -118,11 +118,15 @@ def HOME(request):
             img =cd.img
             title=cd.title
 
-        
-        last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')[0]
-        last_msg=last_msg_Data.chat
-        last_msg_time=last_msg_Data.chat_date
-        
+        last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')
+        if len(last_msg_Data)>0:
+            
+            last_msg=last_msg_Data[0].chat
+            last_msg_time=last_msg_Data[0].chat_date
+        else:
+            last_msg=''
+            last_msg_time=cd.box_created_date
+
         Chats_Data+=[{
                 'chat_box_id':cd.chat_box_id,
                 'title':title,
@@ -146,7 +150,7 @@ def open_conv(request):
     if request.method == "GET":
         chat_box_id =request.GET.get('chat_box_id')
         try:
-            chats_data = chats.objects.get(chat_box_id=chat_box_id)
+            chats_data = Chats_BOX.objects.get(chat_box_id=chat_box_id)
             check_user = getattr(chats_data,'chats_users')
             if(user_L.email in check_user or user_L.email in check_user.split()):
                 
@@ -156,8 +160,11 @@ def open_conv(request):
                 for cmd in   reversed(chat_msg_D) :
                     file = cmd.file.url if cmd.file else " "
                     sender_profile = USER.objects.get(email=cmd.user)
-                    sender_profile_pic = getattr(sender_profile,'profile_pic')
-                    print('sender_profile_pic.url',sender_profile_pic.url)
+                    if getattr(sender_profile,'profile_pic'):
+                        sender_profile_pic = getattr(sender_profile,'profile_pic').url
+                    else:
+                        sender_profile_pic=''
+
                     chat_msg_data+=[{
                         'chat_msg_id':cmd.chat_msg_id,
                         'chat_box_id':cmd.chat_box_id,
@@ -172,7 +179,7 @@ def open_conv(request):
                         'contain_files':cmd.contain_files,
                         'files_id':cmd.files_id,
 
-                        'sender_profile_pic':(sender_profile_pic.url),
+                        'sender_profile_pic':sender_profile_pic,
                     },]
 
 
@@ -237,7 +244,7 @@ def load_details_area(request):
         try:
 
             
-            chats_data = chats.objects.get(chat_box_id=chat_box_id)
+            chats_data = Chats_BOX.objects.get(chat_box_id=chat_box_id)
             check_user = getattr(chats_data,'chats_users')
             if(user_L.email in check_user or user_L.email in check_user.split()):
                 
@@ -257,13 +264,17 @@ def load_details_area(request):
                 else:
                     img =chats_data.img
                     title=chats_data.title
-        
-                html = render_to_string('html/details_area.html', {
+
+
+                shared_image=chat_file.objects.filter(chat_box_id=chat_box_id).order_by('file_date')
+                
+                html = render_to_string('html/chat_box/details_area.html', {
                             'chats_users':chats_data.chats_users,
                             'img':img,
-                            'title':title,})
+                            'title':title,
+                            'shared_image':shared_image,})
                 
-
+                
                 return JsonResponse({
                         'code':201,
                         'description':'',

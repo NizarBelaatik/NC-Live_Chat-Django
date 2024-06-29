@@ -121,7 +121,6 @@ html {
   flex-shrink: 0;
 }
 .detail-area {
-
   border-left: 1px solid var(--border-color);
   margin-left: auto;
   padding: 30px 30px 0 30px;
@@ -131,9 +130,9 @@ html {
 
   /* new edit*/
   overflow-x: hidden;
-  width: 500px;
 
 }
+
 .chat-area {
   flex-grow: 1;
 }
@@ -682,7 +681,7 @@ html {
   font-weight: 500;
 }
 @media (max-width: 1120px) {
-  .detail-area {
+  .detail-area--- {
     display: none;
   }
 }

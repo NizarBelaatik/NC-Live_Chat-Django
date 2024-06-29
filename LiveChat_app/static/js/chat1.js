@@ -179,7 +179,10 @@ function open_details_area(box_ID){
     });
     console.log('box_ID 2 ',box_ID);
 }
-
+function close_details_area(){
+    $('#detail-area').html('');
+    $('#detail-area').css('display','none');
+}
 function add_conv(){
     
 }

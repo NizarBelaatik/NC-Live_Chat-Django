@@ -443,6 +443,19 @@ html {
 .chat-area-footer input::placeholder {
   color: var(--input-chat-color);
 }
+
+.detail-area-top-header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.detail-area-close-btn {
+  display: flex;
+  flex-direction: column;
+  text-align: right !important;
+  width: 100%;
+}
+
 .detail-area-header {
   display: flex;
   flex-direction: column;

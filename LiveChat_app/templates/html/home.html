@@ -70,7 +70,7 @@
           <div class="conversation-area">
 
             {% for chats in chats_data %}
-            <div class="msg active online"  onclick="open_conv('{{chats.chat_box_id}}')">
+            <div class="msg  online "  onclick="open_conv('{{chats.chat_box_id}}',this)">
               <img class="msg-profile" src="{{ chats.img.url }}" alt="" />
               <div class="msg-detail">
                 <div class="msg-username">{% if not grp %} {% for user_title in chats.chats_users_as_list %} {% if not user_title == user.email %}{{user_title}}{% endif %} {% endfor %}{% endif %}</div>
@@ -82,7 +82,7 @@
               </div>
             </div>
             {% endfor %}
-            <div class="msg active online">
+            <div class="msg  online">
             <img class="msg-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%281%29.png" alt="" />
             <div class="msg-detail">
               <div class="msg-username">Madison Jones</div>

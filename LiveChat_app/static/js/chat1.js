@@ -1,7 +1,15 @@
-function open_conv(chat_box_id){
+function open_conv(chat_box_id,elem){
     const chat_area = document.querySelector('.chat-area');
-
     
+    var all_elem_with_active=document.querySelectorAll('.msg');
+    all_elem_with_active.forEach(function(aewa){
+        if(aewa.classList.contains('active')){
+            aewa.classList.remove("active");
+        }
+    })
+
+
+    elem.classList.add("active");
     var formData = new FormData();
     formData.append('chat_box_id', chat_box_id);
 

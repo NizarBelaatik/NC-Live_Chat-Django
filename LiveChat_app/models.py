@@ -34,6 +34,7 @@ class USER(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     firstname = models.CharField(max_length=30, blank=True, null=True)
     lastname = models.CharField(max_length=30, blank=True, null=True)
+    username = models.CharField(max_length=30, blank=True, null=True)
     num = models.CharField(max_length=30, blank=True, null=True)
     
     is_active = models.BooleanField(default=True)
@@ -52,7 +53,7 @@ class USER(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['firstname','lastname']
+    REQUIRED_FIELDS = ['firstname','lastname','username']
 
     def __str__(self):
         return self.email
@@ -61,7 +62,7 @@ class USER(AbstractBaseUser, PermissionsMixin):
 class chats(models.Model):
     chat_box_id = models.CharField(max_length=30, blank=True, null=True) # convertion id
     chats_users = models.TextField(blank=True)
-    
+
     grp = models.BooleanField(default=False)
     title = models.CharField(max_length=100, blank=True, null=True)
     img = models.ImageField(blank=True, upload_to='uploads/chats_img', null=True)
@@ -92,3 +93,4 @@ class chat_file(models.Model):
     files_id = models.CharField(max_length=30, blank=True, null=True)
     file = models.ImageField(blank=True, upload_to='uploads/chat_files', null=True)
     file_type = models.CharField(max_length=30, blank=True, null=True)
+    file_date = models.DateTimeField(default=timezone.now)

@@ -42,6 +42,7 @@
     </script>
 </head>
 <body>
+
   <div style="">
     <div class="app">
       <div class="header">
@@ -71,35 +72,27 @@
         <div class="conversation-area">
 
           {% for chats in chats_data %}
-          <div class="msg  online "  onclick="open_conv('{{chats.chat_box_id}}',this)">
-            {% if chats.img %}
-              <img class="msg-profile" src="{{ chats.img.url }}" alt="" />
-            {% else %}
-              <i class="msg-profile bx bx-user"></i>
-            {% endif %}
+            <div class="msg  online "  onclick="open_conv('{{chats.chat_box_id}}',this)">
+              {% if chats.img %}
+                <img class="msg-profile" src="{{ chats.img.url }}" alt="" />
+              {% else %}
+                <i class="msg-profile bx bx-user"></i>
+              {% endif %}
 
-            <div class="msg-detail">
-              <div class="msg-username">{{chats.title}}</div>
-              <div class="msg-content">
-              <span class="msg-message">{{chats.last_msg}}</span>
-              <span class="msg-date">{{ chats.last_msg_time|custom_timesince  }}
-              </span>
+              <div class="msg-detail">
+                <div class="msg-username">{{chats.title}}</div>
+                <div class="msg-content">
+                <span class="msg-message">{{chats.last_msg}}</span>
+                <span class="msg-date">{{ chats.last_msg_time|custom_timesince  }}
+                </span>
+                </div>
               </div>
             </div>
-          </div>
           {% endfor %}
-          <div class="msg  online">
-          <img class="msg-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%281%29.png" alt="" />
-          <div class="msg-detail">
-            <div class="msg-username">Madison Jones</div>
-            <div class="msg-content">
-            <span class="msg-message">What time was our meet</span>
-            <span class="msg-date">20m</span>
-            </div>
-          </div>
-          </div>
 
-          <div class="msg ">
+
+
+          <div class="msg " >
           <img class="msg-profile" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3364143/download+%2812%29.png" alt="" />
           <div class="msg-detail">
             <div class="msg-username">Miguel Cohen</div>
@@ -110,30 +103,18 @@
           </div>
           </div>
 
-          <button class="add"></button>
+          <button class="add" onclick="add_conv()"></button>
           <div class="overlay"></div>
         </div>
 
 
-        <div class="chat-area" style="">
+        <div class="chat-area" id="chat-area" style="">
+
+          <!-- START CHAT AREA -->
+          <!-- START CHAT AREA -->
+          <!-- START CHAT AREA -->
           <div class="chat-area" style="display:non;">
-            <!-- START CHAT AREA -->
-            <!-- START CHAT AREA -->
-            <!-- START CHAT AREA -->
-            <div class="chat-area-header" id="chat_header_area_id">
-
-            </div>
-            <div class="chat-area-main" id="chat_main_area_id" style="overflow-y: auto;
-    display: flex;
-    flex-direction: column;overflow-y: auto; height:100%!important; width: 100%!important; flex-direction: column-reverse;">
-                            
-            </div>
-
-            <!-- END CHAT AREA -->
-            <!-- END CHAT AREA -->
-            <!-- END CHAT AREA -->
-
-
+        
             <!--<form method="POST" class="" style="display:flex;width:100%;margin:0;padding:0%;" >
                 {% csrf_token %} -->
             <div class="chat-area-footer">
@@ -166,8 +147,11 @@
               
             </div>
             <!-- </form>-->
-
           </div>
+          <!-- END CHAT AREA -->
+          <!-- END CHAT AREA -->
+          <!-- END CHAT AREA -->
+           
         </div>
 
         <div class="detail-area " >

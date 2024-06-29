@@ -9,6 +9,9 @@ from django.http import JsonResponse
 from django.core import serializers
 from .models import USER
 from .models import chats,chat_msg ,chat_file
+
+from django.utils import timezone
+from datetime import datetime
 # Create your views here.
 
 def Login(request):
@@ -67,7 +70,9 @@ def SignupU(request):
 
     return render(request, 'html/signup.html',{"per":per,"pl":pl,"pm":pm,"pc":pc,"pn":pn})
     
-    
+def SignUP(request):
+    return render(request,'html/signup.html')
+
 @login_required
 def LogoutU(request):
     logout(request)
@@ -99,7 +104,8 @@ def HOME(request):
                 img = getattr(other_user_data,'profile_pic')
                 firstname = getattr(other_user_data,'firstname')
                 lastname = getattr(other_user_data,'lastname')
-                title=f'{firstname} {lastname}'
+                username = getattr(other_user_data,'username')
+                title=username
             except:
                 img = ''
                 title =''
@@ -107,20 +113,27 @@ def HOME(request):
             img =cd.img
             title=cd.title
 
+        
+        last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')[0]
+        last_msg=last_msg_Data.chat
+        last_msg_time=last_msg_Data.chat_date
+        
         Chats_Data+=[{
                 'chat_box_id':cd.chat_box_id,
                 'title':title,
                 'chats_users':cd.chats_users,
                 'img':img,
                 'grp':cd.grp,
-                'last_msg':cd.last_msg,
-                'last_msg_time':cd.last_msg_time,
+                'last_msg':last_msg,
+                'last_msg_time':last_msg_time,
             }]
         
+    #Chats_Data.sort(key=lambda x: x['last_msg_time'], reverse=True)
+    Chats_Data_sorted = sorted(Chats_Data, key=lambda x: x['last_msg_time'], reverse=True)
 
-    #chat_msg_data+=[{'chat_msg_data':chat_msg_data,}]
+
     return render(request,'html/home.html',{'chat_msg_data':chat_msg_data,
-                                            'chats_data':Chats_Data,})
+                                            'chats_data':Chats_Data_sorted,})
 
 @login_required
 def open_conv(request):
@@ -171,7 +184,8 @@ def open_conv(request):
                         img = getattr(other_user_data,'profile_pic')
                         firstname = getattr(other_user_data,'firstname')
                         lastname = getattr(other_user_data,'lastname')
-                        title=f'{firstname} {lastname}'
+                        username = getattr(other_user_data,'username')
+                        title=username
                     except:
                         img = ''
                         title =''
@@ -189,13 +203,14 @@ def open_conv(request):
                         'last_msg_time':chats_data.last_msg_time,
                     }
 
-
+                box_ID= chats_data.chat_box_id
                 return JsonResponse({'status': 'success',
                         'code':201,
                         'description':'',
                         'chat_msg_data':chat_msg_data,
                         'cd':cd,
                         'chat_box_id':chats_data.chat_box_id,
+                        'box_ID':box_ID,
                     }, safe=False)
         except:
             return JsonResponse({'status': 'error',
@@ -208,6 +223,52 @@ def open_conv(request):
                         'code':400})
 
 
-def SignUP(request):
 
-    return render(request,'html/signup.html')
+
+def custom_timesince(value):
+    if not isinstance(value, datetime):
+        return value
+
+    # Convert naive datetime to aware datetime
+    if timezone.is_naive(value):
+        value = timezone.make_aware(value, timezone.get_current_timezone())
+
+    now = timezone.now()
+    time_diff = now - value
+
+    sec =time_diff.total_seconds()
+    minutes = float(time_diff.total_seconds() // 60)
+    hours = float(minutes // 60)
+    day = float(hours // 24)
+    month=float(day // 30)
+    year=float(month // 12)
+
+
+    # Custom formatting based on the time difference
+    if year>0:
+        if year == 1:
+            return f"{int(year)} year ago"
+        else:
+            return f"{int(year)} years ago"
+    elif month>0:
+        if month == 1:
+            return f"{int(month)} month ago"
+        else:
+            return f"{int(month)} months ago"
+    elif day>0:
+        if day ==1:
+            return f"{int(day)} day ago"
+        else:
+            return f"{int(day)} days ago"
+    elif hours > 0 and hours < 24:
+        if ((minutes+15)//60 > hours):
+            return f"{int(hours+1)}h ago"
+        else:
+            return f"{int(hours)}h ago"
+    
+    elif minutes < 60:
+        return f"{int(minutes)}min ago"
+    elif minutes < 1:
+        return "just now"
+    else:
+        return f"{time_diff} ago"

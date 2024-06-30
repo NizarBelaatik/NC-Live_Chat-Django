@@ -12,6 +12,13 @@ def next_elem_in_for(sequence, position):
     except IndexError:
         return None
     
+@register.filter 
+def prev_elem_in_for(sequence, position):
+    try:
+        return sequence[int(position)-1]
+    except IndexError:
+        return None    
+
 
 @register.filter
 def custom_timesince(value):

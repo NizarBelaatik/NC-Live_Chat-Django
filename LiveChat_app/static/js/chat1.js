@@ -32,10 +32,12 @@ function open_conv(chat_box_id,elem){
 
         success: function(data) {
             var new_chat_area="";
+            console.log('code',data.code);
             if(data.code == 201){
-
+                $('#chat-area').html(data.html);
+                
                 //var chatData = JSON.parse(data.chat_msg_data);
-                renderChatMessages(data.chat_msg_data,data.cd,data.box_ID);
+                //renderChatMessages(data.chat_msg_data,data.cd,data.box_ID);
             }
         }
     })
@@ -149,8 +151,9 @@ function renderChatMessages(data,cd,box_ID) {
             </div>
         </div>`;
     var chat_area_id = document.querySelector('#chat-area');
-    chat_area_id.innerHTML=a;
+    //chat_area_id.innerHTML=a;
     chatMainArea.scrollTop = chatMainArea.scrollHeight;
+    
 
     const chatContent = document.getElementById('chat_main_area_id');
     chatContent.scrollTop = chatContent.scrollHeight;

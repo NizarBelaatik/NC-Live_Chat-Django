@@ -83,15 +83,14 @@ class chat_msg(models.Model):
     chat = models.TextField()
     
     contain_file = models.BooleanField(default=False)
-    file_type = models.CharField(max_length=30, blank=True, null=True)
-    file = models.ImageField(blank=True, upload_to='uploads/chat_files', null=True)
-    
     contain_files = models.BooleanField(default=False)
+
     files_id = models.CharField(max_length=30, blank=True, null=True)
 
 class chat_file(models.Model):
     chat_box_id = models.CharField(max_length=30, blank=True, null=True) # convertion id
     chat_file_id = models.CharField(max_length=30, blank=True, null=True)
+    
     files_id = models.CharField(max_length=30, blank=True, null=True)
     file = models.ImageField(blank=True, upload_to='uploads/chat_files', null=True)
     file_type = models.CharField(max_length=30, blank=True, null=True)

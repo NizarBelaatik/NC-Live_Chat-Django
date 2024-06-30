@@ -145,95 +145,6 @@ def HOME(request):
                                             'chats_data':Chats_Data_sorted,})
 
 @login_required
-def open_conv_2(request):
-    user_L=request.user
-    if request.method == "GET":
-        chat_box_id =request.GET.get('chat_box_id')
-        try:
-            chats_data = Chats_BOX.objects.get(chat_box_id=chat_box_id)
-            check_user = getattr(chats_data,'chats_users')
-            if(user_L.email in check_user or user_L.email in check_user.split()):
-                
-                chat_msg_D = chat_msg.objects.filter(chat_box_id=chat_box_id).order_by('chat_date')
-                #chat_msg_data = serializers.serialize('json', chat_msg_data)
-                chat_msg_data=[]
-                for cmd in   reversed(chat_msg_D) :
-                    file = cmd.file.url if cmd.file else " "
-                    sender_profile = USER.objects.get(email=cmd.user)
-                    if getattr(sender_profile,'profile_pic'):
-                        sender_profile_pic = getattr(sender_profile,'profile_pic').url
-                    else:
-                        sender_profile_pic=''
-
-                    chat_msg_data+=[{
-                        'chat_msg_id':cmd.chat_msg_id,
-                        'chat_box_id':cmd.chat_box_id,
-                        'user':cmd.user,
-                        'chat_date':cmd.chat_date,
-                        'contain_txt':cmd.contain_txt,
-                        'chat':cmd.chat,
-                        'contain_file':cmd.contain_file,
-                        'file_type':cmd.file_type,
-
-                        'file_url': file ,
-                        'contain_files':cmd.contain_files,
-                        'files_id':cmd.files_id,
-
-                        'sender_profile_pic':sender_profile_pic,
-                    },]
-
-
-
-                other_user_email=''
-                for chats__users in check_user.split():
-                    if not chats__users == user_L.email:
-                        other_user_email = chats__users
-
-                if not chats_data.grp :
-                    try:
-                        other_user_data = USER.objects.get(email=other_user_email)
-                        img = getattr(other_user_data,'profile_pic')
-                        firstname = getattr(other_user_data,'firstname')
-                        lastname = getattr(other_user_data,'lastname')
-                        username = getattr(other_user_data,'username')
-                        title=username
-                    except:
-                        img = ''
-                        title =''
-                else:
-                    img =chats_data.img
-                    title=chats_data.title
-
-                cd = {
-                        'chat_box_id':chats_data.chat_box_id,
-                        'title':title,
-                        'chats_users':chats_data.chats_users,
-                        'img':img.url,
-                        'grp':chats_data.grp,
-                        'last_msg':chats_data.last_msg,
-                        'last_msg_time':chats_data.last_msg_time,
-                    }
-
-                box_ID= chats_data.chat_box_id
-                return JsonResponse({'status': 'success',
-                        'code':201,
-                        'description':'',
-                        'chat_msg_data':chat_msg_data,
-                        'cd':cd,
-                        'chat_box_id':chats_data.chat_box_id,
-                        'box_ID':box_ID,
-                    }, safe=False)
-        except:
-            return JsonResponse({'status': 'error',
-                        'code':403,
-                        'description':'Access denied! User not found'}, safe=False)
-
-
-        
-    return JsonResponse({'status': 'error',
-                        'code':400})
-
-
 def open_conv(request):
 
     user_L=request.user
@@ -250,7 +161,41 @@ def open_conv(request):
                 chat_msg_D = chat_msg.objects.filter(chat_box_id=chat_box_id).order_by('chat_date')
                 chat_msg_data=[]
                 for cmd in   reversed(chat_msg_D) :
-                    file = cmd.file if cmd.file else " "
+                    #files_id = cmd.contain_file if cmd.file else " "
+                    files=[]
+                    if cmd.contain_file :
+                        print('\n\n\n cmd.files_id',cmd.files_id)
+                        file_data = chat_file.objects.filter(chat_box_id=chat_box_id, chat_file_id=cmd.files_id)
+                        if len(file_data)>0:
+                            file_data=file_data[0]
+                            files={
+                                'file_check':True,
+                                'file_index':0,
+                                'file':file_data.file,
+                                'file_type':file_data.file_type,
+                                'file_date':file_data.file_date,
+                                'files_id':file_data.files_id,}
+                            
+                    elif cmd.contain_files :
+                        
+                        file_data = chat_file.objects.filter(chat_box_id=chat_box_id, chat_file_id=cmd.files_id)
+                        index=0
+                        for f_D  in file_data:
+                            
+                            files+=[{
+                                'file_check':True,
+                                'file_index':index,
+                                'file':f_D.file,
+                                'file_type':f_D.file_type,
+                                'file_date':f_D.file_date,
+                                'files_id':f_D.files_id,}]
+                            
+                            index+=1
+                        
+                                
+                    else:
+                        files=[{'file_check':False}]
+                        
                     sender_profile = USER.objects.get(email=cmd.user)
                     if getattr(sender_profile,'profile_pic'):
                         sender_profile_pic = getattr(sender_profile,'profile_pic')
@@ -265,13 +210,13 @@ def open_conv(request):
                         'contain_txt':cmd.contain_txt,
                         'chat':cmd.chat,
                         'contain_file':cmd.contain_file,
-                        'file_type':cmd.file_type,
 
-                        'file': file ,
                         'contain_files':cmd.contain_files,
                         'files_id':cmd.files_id,
 
                         'sender_profile_pic':sender_profile_pic,
+                        
+                        'files':files,
 
                     },]
 
@@ -312,7 +257,8 @@ def open_conv(request):
                 html = render_to_string('html/chat_box/chat_area.html', {
                             'user':user,
                             'chat_msg_data':chat_msg_data,
-                            'Chats_BOX':cd,})
+                            'Chats_BOX':cd,
+                            'box_ID':box_ID,})
                 return JsonResponse({'status': 'success',
                                     'code':201,
                                     'description':'',
@@ -343,38 +289,40 @@ def load_details_area(request):
     user_L=request.user
     if request.method == "GET": #request.is_ajax():
         chat_box_id =request.GET.get('chat_box_id')
+        chats_data = Chats_BOX.objects.get(chat_box_id=chat_box_id)
+        check_user = getattr(chats_data,'chats_users')
+        if(user_L.email in check_user or user_L.email in check_user.split()):
+            
+            if not chats_data.grp :
+                try:
+                    other_user_email=Get_Other_User_Email(user_L,check_user)
+                    other_user_data = USER.objects.get(email=other_user_email)
+
+                    img = getattr(other_user_data,'profile_pic')
+                    firstname = getattr(other_user_data,'firstname')
+                    lastname = getattr(other_user_data,'lastname')
+                    username = getattr(other_user_data,'username')
+                    title=username
+                except:
+                    img = ''
+                    title =''
+            else:
+                img =chats_data.img
+                title=chats_data.title
+
+
+            shared_image_1=chat_file.objects.filter(chat_box_id=chat_box_id).order_by('file_date')
+            shared_image_2=chat_file.objects.filter(chat_box_id=chat_box_id).order_by('file_date')
+            shared_image = shared_image_1
+            html = render_to_string('html/chat_box/details_area.html', {
+                        'chats_users':chats_data.chats_users,
+                        'img':img,
+                        'title':title,
+                        'shared_image':shared_image,})
         try:
 
             
-            chats_data = Chats_BOX.objects.get(chat_box_id=chat_box_id)
-            check_user = getattr(chats_data,'chats_users')
-            if(user_L.email in check_user or user_L.email in check_user.split()):
-                
-                if not chats_data.grp :
-                    try:
-                        other_user_email=Get_Other_User_Email(user_L,check_user)
-                        other_user_data = USER.objects.get(email=other_user_email)
-
-                        img = getattr(other_user_data,'profile_pic')
-                        firstname = getattr(other_user_data,'firstname')
-                        lastname = getattr(other_user_data,'lastname')
-                        username = getattr(other_user_data,'username')
-                        title=username
-                    except:
-                        img = ''
-                        title =''
-                else:
-                    img =chats_data.img
-                    title=chats_data.title
-
-
-                shared_image=chat_file.objects.filter(chat_box_id=chat_box_id).order_by('file_date')
-                
-                html = render_to_string('html/chat_box/details_area.html', {
-                            'chats_users':chats_data.chats_users,
-                            'img':img,
-                            'title':title,
-                            'shared_image':shared_image,})
+            
                 
                 
                 return JsonResponse({

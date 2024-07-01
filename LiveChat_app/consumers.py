@@ -104,7 +104,6 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
                     "message":message ,
                     'chat_box_id':chat_box_id,
                     'chat_msg_id':chat_msg_id,
-                    
                 })
         
 
@@ -120,11 +119,21 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
 
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")
-
+        
+        chat_msg_data={'chat':message,
+                       'user':email,
+                       'sender_profile_pic':user_profile_pic}
+        
+        print('\n\n user_',user_)
+        html =  render_to_string(
+            'html/chat_box/single_msg.html',
+            {'chat': chat_msg_data}
+        )
         if message:
             await self.send(text_data = json.dumps({
                                                     "email":email,
                                                     "userProfilePic":user_profile_pic.url,
                                                     "message":message,
-                                                    "chat_box_id":chat_box_id}))
+                                                    "chat_box_id":chat_box_id,
+                                                    'html':html}))
 

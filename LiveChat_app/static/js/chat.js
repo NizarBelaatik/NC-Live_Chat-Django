@@ -10,6 +10,8 @@ chatSocket.onmessage = function (e) {
     const userProfilePic = data['userProfilePic'];
     const email_sender = data['email'];
     const html = data['html'];
+    const test1 = data['test1'];
+    console.log('html',html)
     document.querySelector("#text_input").value = "";
     var owner_chat ="";
     if(email_sender == USER_email){
@@ -27,7 +29,7 @@ chatSocket.onmessage = function (e) {
             </div>
         </div>
         `;
-    $("#chat_main_area_id").append(newMessage);
+    $("#chat_main_area_id").prepend(html);
 };
 
 chatSocket.onclose = function(e) {

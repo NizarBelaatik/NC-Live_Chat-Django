@@ -6,25 +6,17 @@
 
 <div class="chat-msg {% if user.email == chat.user %} owner {% endif %}">
     {% if not user.email == chat.user %}
-      {% if not forloop.last %}
-        {% with next_item=chat_msg_data|prev_elem_in_for:forloop.counter0 %}
-            {% if not next_item.user == chat.user %}
-                <div class="chat-msg-profile">
-                  <img class="chat-msg-img" src="{{ chat.sender_profile_pic.url }}" alt="" />
-                  <div class="chat-msg-date">{{ chat.chat_date }}</div>
-                </div>
-            {% else %}
-              <div class="chat-msg-profile">
-                <div class="chat-msg-date">{{ chat.chat_date }}</div>
-              </div>
-            {% endif %}
-        {% endwith %}
+      {% if not user.email == chat.user %}
+          <div class="chat-msg-profile">
+            <img class="chat-msg-img" src="{{ chat.sender_profile_pic.url }}" alt="" />
+            <div class="chat-msg-date">{{ chat.chat_date }}</div>
+          </div>
       {% else %}
         <div class="chat-msg-profile">
-          <img class="chat-msg-img" src="{{ user.profile_pic.url }}" alt="" />
           <div class="chat-msg-date">{{ chat.chat_date }}</div>
         </div>
       {% endif %}
+
     {% endif %}
     <div class="chat-msg-content">
       

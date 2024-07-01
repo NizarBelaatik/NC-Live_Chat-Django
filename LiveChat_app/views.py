@@ -150,7 +150,8 @@ def open_conv(request):
     user_L=request.user
     user={'email':user_L.email,
           'profile_pic':user_L.profile_pic}
-    
+
+    print
     if request.method == "GET":
         chat_box_id =request.GET.get('chat_box_id')
         try:
@@ -164,7 +165,6 @@ def open_conv(request):
                     #files_id = cmd.contain_file if cmd.file else " "
                     files=[]
                     if cmd.contain_file :
-                        print('\n\n\n cmd.files_id',cmd.files_id)
                         file_data = chat_file.objects.filter(chat_box_id=chat_box_id, chat_file_id=cmd.files_id)
                         if len(file_data)>0:
                             file_data=file_data[0]

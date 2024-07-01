@@ -2,11 +2,13 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async
 
 from django.contrib.auth.models import User
 from .models import USER
 from .models import  Chats_BOX,chat_msg,chat_file
 
+from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 
 import logging
@@ -24,10 +26,13 @@ def generate_random_string(length):
 def get_user_object(email):
     return USER.objects.get(email=email)
 
+@database_sync_to_async
+def get_msg_object(Object,chat_msg_id,chat_box_id):
+    return Object.objects.get(chat_msg_id=chat_msg_id,chat_box_id=chat_box_id)
 
 
 @database_sync_to_async
-def create_new_message(chat_msg_id, chat_box_id, user,contain_txt, chat, contain_file, file_type, file,contain_files , files_id):
+def create_new_message(chat_msg_id, chat_box_id, user,contain_txt, chat, contain_file,contain_files , files_id):
     return chat_msg.objects.create(
         chat_msg_id=chat_msg_id,
         chat_box_id=chat_box_id,
@@ -36,14 +41,20 @@ def create_new_message(chat_msg_id, chat_box_id, user,contain_txt, chat, contain
         chat=chat,
 
         contain_file=contain_file,
-        file_type=file_type,
-        file=file,
-
         contain_files=contain_files,
         files_id=files_id,
     )
 
-
+@database_sync_to_async
+def check_id_in_model(Object,column,id=generate_random_string(10)):
+    col_contains = f'{column}__contains'
+    
+    while True:
+        obj=Object.objects.filter( **{col_contains:id} )
+        if  len(obj)==0 :
+            print('\n\n\n True','\n\n\n')
+            return id
+        id = generate_random_string(10)
 
 class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketConsumer
     async def connect(self):
@@ -66,89 +77,54 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")
 
+        chat_msg_id = await check_id_in_model(chat_msg,'chat_msg_id')
+        chat_box_id = text_data_json["chat_box_id"]
+
+        contain_txt = False
+        if message:
+            contain_txt = True
+            
+        contain_file = False
+        contain_files = False
+
+        files_id=''
+        if contain_file or contain_files:
+            files_id = await check_id_in_model(chat_msg,'files_id')
+
+        await create_new_message(chat_msg_id, chat_box_id, email,contain_txt, message, contain_file,contain_files , files_id)
+
+        #msg_data= await get_msg_object(chat_msg,chat_msg_id,chat_box_id)
+
+        
         await self.channel_layer.group_send(
                 self.roomGroupName,{
                     "type" : "sendMessage" ,
-                    "email":text_data_json['email'],
+                    "email":email,
                     "userProfilePic":user_profile_pic,
-                    "message":message 
+                    "message":message ,
+                    'chat_box_id':chat_box_id,
+                    'chat_msg_id':chat_msg_id,
+                    
                 })
+        
+
 
     async def sendMessage(self , event) : 
         user_ = self.scope.get('user')
         email = event["email"]
         #userProfilePic = event["userProfilePic"]
         message = event["message"]
-
+        chat_box_id = event["chat_box_id"]
+        chat_msg_id = event["chat_msg_id"]
        
 
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")
+
         if message:
             await self.send(text_data = json.dumps({
                                                     "email":email,
                                                     "userProfilePic":user_profile_pic.url,
-                                                    "message":message }))
+                                                    "message":message,
+                                                    "chat_box_id":chat_box_id}))
 
-
-
-class ChatConsumer_2(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.roomGroupName = "chat_rooms"
-        await self.channel_layer.group_add(
-            self.roomGroupName ,
-            self.channel_name
-        )
-        await self.accept()
-    async def disconnect(self , close_code):
-        await self.channel_layer.group_discard(
-            self.roomGroupName , 
-            self.channel_name #self.channel_name channel_layer
-        )
-    async def receive(self, text_data):
-        user_ = self.scope.get('user')
-
-        text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-        email = text_data_json["email"]
-        username = text_data_json["username"]
-        userProfilePic = text_data_json["userProfilePic"]
-        col = text_data_json["col"]
-        cellId = text_data_json["cellId"]
-        
-        #obj_user = await get_user_object(email)
-        #user_profile_pic = getattr(obj_user, "profile_pic")
-
-        if message:
-            msg_id = generate_random_string(10)
-
-            # Use database_sync_to_async to execute the create operation asynchronously
-            await create_new_message(msg_id, cellId, username, email, message, col)
-                
-        
-            await self.channel_layer.group_send(
-                self.roomGroupName,{
-                    "type" : "sendMessage" ,
-                    "email":email,
-                    "username":username ,
-                    "userProfilePic":userProfilePic,
-                    "message":message ,
-                    "col":col ,
-                    "cellId":cellId
-                })
-        
-        
-    async def sendMessage(self , event) : 
-        user_ = self.scope.get('user')
-        email = event["email"]
-        userProfilePic = event["userProfilePic"]
-        message = event["message"]
-
-
-        obj_user = await get_user_object(email)
-        user_profile_pic = getattr(obj_user, "profile_pic")
-        if message:
-            await self.send(text_data = json.dumps({
-                                                    "email":email,
-                                                    "userProfilePic":userProfilePic,
-                                                    "message":message }))

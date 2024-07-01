@@ -9,6 +9,7 @@ chatSocket.onmessage = function (e) {
     const message = data['message'];
     const userProfilePic = data['userProfilePic'];
     const email_sender = data['email'];
+    const html = data['html'];
     document.querySelector("#text_input").value = "";
     var owner_chat ="";
     if(email_sender == USER_email){
@@ -34,11 +35,11 @@ chatSocket.onclose = function(e) {
 
 // Send message to server
 
-function sendMessage(){
+function sendMessage(chat_box_id){
     var messageInput = document.querySelector("#text_input").value;
-    var fileInput = document.querySelector("#file_input").value;
+    //var fileInput = document.querySelector("#file_input").value;
 
-    if(fileInput.files.length>0){
+    if(messageInput==-123){ //fileInput.files.length
         var formData = new FormData();
         formData.append('csrfmiddlewaretoken', csrfToken);
         formData.append('chat_box_id', chat_box_id);
@@ -59,15 +60,17 @@ function sendMessage(){
                 if(data.code == 201){
     
                     //var chatData = JSON.parse(data.chat_msg_data);
-                    renderChatMessages(data.chat_msg_data,data.cd,data.box_ID);
                 }
             }
         })
     }
 
+
+
     chatSocket.send(JSON.stringify({ 
         'message': messageInput, 
         'email' : USER_email,
+        'chat_box_id':chat_box_id,
         //'userProfilePic':String(userProfilePic),
 
 

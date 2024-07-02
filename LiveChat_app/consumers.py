@@ -73,38 +73,47 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         email = text_data_json['email']
+        user = self.scope['user']
 
-        obj_user = await get_user_object(email)
-        user_profile_pic = getattr(obj_user, "profile_pic")
+        if user.is_authenticated:
+            obj_user = await get_user_object(email)
+            user_profile_pic = getattr(obj_user, "profile_pic")
 
-        chat_msg_id = await check_id_in_model(chat_msg,'chat_msg_id')
-        chat_box_id = text_data_json["chat_box_id"]
+            chat_msg_id = await check_id_in_model(chat_msg,'chat_msg_id')
+            chat_box_id = text_data_json["chat_box_id"]
 
-        contain_txt = False
-        if message:
-            contain_txt = True
+            contain_txt = False
+            if message:
+                contain_txt = True
+                
+            contain_file = False
+            contain_files = False
+
+            files_id=''
+            if contain_file or contain_files:
+                files_id = await check_id_in_model(chat_msg,'files_id')
+
+            await create_new_message(chat_msg_id, chat_box_id, email,contain_txt, message, contain_file,contain_files , files_id)
+
+            #msg_data= await get_msg_object(chat_msg,chat_msg_id,chat_box_id)
+
+            # Render message asynchronously
             
-        contain_file = False
-        contain_files = False
 
-        files_id=''
-        if contain_file or contain_files:
-            files_id = await check_id_in_model(chat_msg,'files_id')
-
-        await create_new_message(chat_msg_id, chat_box_id, email,contain_txt, message, contain_file,contain_files , files_id)
-
-        #msg_data= await get_msg_object(chat_msg,chat_msg_id,chat_box_id)
-
-        
-        await self.channel_layer.group_send(
-                self.roomGroupName,{
-                    "type" : "sendMessage" ,
-                    "email":email,
-                    "userProfilePic":user_profile_pic,
-                    "message":message ,
-                    'chat_box_id':chat_box_id,
-                    'chat_msg_id':chat_msg_id,
-                })
+            chat_msg_data={'chat':message,
+                       'user':email,
+                       'sender_profile_pic':user_profile_pic}
+            
+            await self.channel_layer.group_send(
+                    self.roomGroupName,{
+                        "type" : "sendMessage" ,
+                        "email":email,
+                        "userProfilePic":user_profile_pic,
+                        "message":message ,
+                        'chat_box_id':chat_box_id,
+                        'chat_msg_id':chat_msg_id,
+                        
+                    })
         
 
 
@@ -115,7 +124,6 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
         message = event["message"]
         chat_box_id = event["chat_box_id"]
         chat_msg_id = event["chat_msg_id"]
-       
 
         obj_user = await get_user_object(email)
         user_profile_pic = getattr(obj_user, "profile_pic")
@@ -124,16 +132,12 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
                        'user':email,
                        'sender_profile_pic':user_profile_pic}
         
-        print('\n\n user_',user_)
-        html =  render_to_string(
-            'html/chat_box/single_msg.html',
-            {'chat': chat_msg_data}
-        )
+        print('\n\n user_',user_.email)
+        html = await sync_to_async(render_to_string)(
+                    'html/chat_box/single_msg.html',
+                    {'chat': chat_msg_data,
+                     'user':user_}
+                    )
         if message:
-            await self.send(text_data = json.dumps({
-                                                    "email":email,
-                                                    "userProfilePic":user_profile_pic.url,
-                                                    "message":message,
-                                                    "chat_box_id":chat_box_id,
-                                                    'html':html}))
+            await self.send(text_data = json.dumps({'html':html}))
 

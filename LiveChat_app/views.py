@@ -258,7 +258,8 @@ def open_conv(request):
                             'user':user,
                             'chat_msg_data':chat_msg_data,
                             'Chats_BOX':cd,
-                            'box_ID':box_ID,})
+                            'box_ID':box_ID,}
+                            , request=request)
                 return JsonResponse({'status': 'success',
                                     'code':201,
                                     'description':'',
@@ -318,7 +319,8 @@ def load_details_area(request):
                         'chats_users':chats_data.chats_users,
                         'img':img,
                         'title':title,
-                        'shared_image':shared_image,})
+                        'shared_image':shared_image,}
+                        , request=request)
         try:
 
             

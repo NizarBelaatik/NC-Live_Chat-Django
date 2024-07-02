@@ -417,6 +417,14 @@ html {
   bottom: 0;
   left: 0;
 }
+.chat-area-footer-form{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  background-color: var(--theme-bg-color);
+  height: 100%;
+  margin: auto;
+}
 .chat-area-footer svg {
   color: var(--settings-icon-color);
   width: 20px;

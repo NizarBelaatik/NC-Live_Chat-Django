@@ -1,3 +1,19 @@
+$("#text_input").submit(function(){
+    $("#sendMessage").click();
+
+});
+var input = document.getElementById("text_input");
+input.addEventListener("keypress", function(event) {
+    // If the user presses the "Enter" key on the keyboard
+    if (event.key === "Enter") {
+        $("#sendMessage").click();
+    }
+  });
+
+function keypressInBox(){
+    $("#sendMessage").click();
+
+}
 
 
 const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
@@ -6,30 +22,11 @@ const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
 
 chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
-    const message = data['message'];
-    const userProfilePic = data['userProfilePic'];
-    const email_sender = data['email'];
     const html = data['html'];
-    const test1 = data['test1'];
-    console.log('html',html)
-    document.querySelector("#text_input").value = "";
-    var owner_chat ="";
-    if(email_sender == USER_email){
-        owner_chat="owner";
-    }
-    var newMessage = `
-        <div class="chat-msg ${owner_chat}">
-            <div class="chat-msg-profile">
-                <img class="chat-msg-img" src="${userProfilePic}" alt="">
-                <div class="chat-msg-date">just now</div>
-            </div>
-            <div class="chat-msg-content">
-                <div class="chat-msg-text">${message}</div>
 
-            </div>
-        </div>
-        `;
     $("#chat_main_area_id").prepend(html);
+    $('.chat-area-footer').find('input, select, textarea, button').prop('disabled', false);
+
 };
 
 chatSocket.onclose = function(e) {
@@ -39,13 +36,16 @@ chatSocket.onclose = function(e) {
 
 function sendMessage(chat_box_id){
     var messageInput = document.querySelector("#text_input").value;
+    var fileInput = document.querySelector("#file-input").value;
     //var fileInput = document.querySelector("#file_input").value;
 
-    if(messageInput==-123){ //fileInput.files.length
+    if(messageInput){ //fileInput.files.length
         var formData = new FormData();
+        //var csrfToken =  document.querySelector("file[name=csrfmiddlewaretoken]");
+        var csrfToken = $("[name=csrfmiddlewaretoken]").val();
         formData.append('csrfmiddlewaretoken', csrfToken);
         formData.append('chat_box_id', chat_box_id);
-        var tr_disabled_id = '#tr_'+cellId;
+        //var tr_disabled_id = '#tr_';
         $('.chat-area-footer').find('input, select, textarea, button').prop('disabled', true);
         $.ajax({
     

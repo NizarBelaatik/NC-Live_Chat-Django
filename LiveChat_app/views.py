@@ -13,7 +13,14 @@ from .models import Chats_BOX,chat_msg ,chat_file
 
 from django.utils import timezone
 from datetime import datetime
-# Create your views here.
+
+import logging
+import random
+import string
+
+
+
+\
 
 def Login(request):
     return render(request,'html/login.html')
@@ -339,6 +346,72 @@ def load_details_area(request):
     return JsonResponse({'status': 'error',
                         'code':400})
 
+@login_required
+def upload_files_from_chat(request):
+    user_L=request.user
+    if request.method == "POST": #request.is_ajax():
+        chat_box_id =request.POST.get('chat_box_id')
+        #fileInput =request.FILES['fileInput']
+        fileInput =request.FILES.getlist('fileInput')
+        contain_txt =request.GET.get('contain_txt')
+
+        chat_file_id = check_id_in_model(chat_file,'chat_file_id')
+        files_len=0
+        for file in fileInput:
+            format_file=file.name.split(".")[1]
+
+            if format_file in ['jpg','png','jpeg','heic']:
+                file_type="img"
+            if format_file in ['doc','docx']:
+                file_type="word"
+            if format_file in ['xls','xlsm']:
+                file_type="excel" 
+            if format_file in ['pdf']:
+                file_type="pdf" 
+            if format_file in ['gif']:
+                file_type="gif" 
+            else:
+                file_type=format_file
+
+            files_id = check_id_in_model(chat_file,'files_id')
+            chat_file.objects.create(
+                chat_box_id=chat_box_id,
+                chat_file_id=chat_file_id,
+                files_id=files_id,
+                file=file,
+                file_type=file_type,
+                user=user_L.email
+                ) 
+            files_len+=1
+        chat_data={'chat_files_id':chat_file_id,
+                   'files_len':files_len}
+        return JsonResponse({
+                        'code':201,
+                        'description':'' ,
+                        'chat_data':chat_data})
+    return JsonResponse({
+                        'code':400,
+                        'description':'' })
+
+
+
+
+
+def generate_random_string(length):
+    characters = string.ascii_letters + string.digits  # You can customize this for your needs
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    random_string=random_string.replace("%20","")
+    random_string=random_string.replace(" ","")
+    return random_string
+
+def check_id_in_model(Object,column,id=generate_random_string(10)):
+    col_contains = f'{column}__contains'
+    
+    while True:
+        obj=Object.objects.filter( **{col_contains:id} )
+        if  len(obj)==0 :
+            return id
+        id = generate_random_string(10)
 
 def custom_timesince(value):
     if not isinstance(value, datetime):

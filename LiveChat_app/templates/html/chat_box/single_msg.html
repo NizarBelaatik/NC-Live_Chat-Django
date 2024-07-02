@@ -18,9 +18,32 @@
       {% endif %}
 
     {% endif %}
+
+
     <div class="chat-msg-content">
       
 
+        {% if chat.contain_file or chat.contain_files %}
+        
+            {% for F in chat.files %}
+              {% if chat.chat_files_id == F.chat_file_id %}
+                tets taste tetst test tets tets 
+                <div class="chat-msg-text">
+                    {% if F.file_type == "excel" %}
+                        <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-excel-2-line fp_icon" ></i></a>
+                    {% elif F.file_type == "pdf" %}
+                        <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-pdf fp_icon" ></i></a>
+                    {% elif F.file_type == "img" or  F.file_type == "gif" %}
+                        <a class="nav-link nav-icon show" href="{{F.file.url }}" download><img src="{{  F.file.url }}" alt="Image" ></a>
+                    {% elif F.file_type == "word" %}
+                        <a class="nav-link nav-icon show" href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-word fp_icon" ></i></a>
+                    {% else %}
+                        <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-line fp_icon" ></i></a>
+                    {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+        {% endif %}
       <div class="chat-msg-text">{{ chat.chat }}</div>
     </div>
       

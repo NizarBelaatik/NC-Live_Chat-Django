@@ -19,6 +19,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LiveChat.settings')
 #application = get_asgi_application()
 
 application = ProtocolTypeRouter({
-    'http': get_asgi_application(),
-    'websocket': AuthMiddlewareStack(URLRouter(websocket_urlpatterns)),  
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            websocket_urlpatterns
+        )
+    ),
 })

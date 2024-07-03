@@ -23,7 +23,7 @@ const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
 chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
     const html = data['html'];
-
+    console.log('html   ',html);
     $("#chat_main_area_id").prepend(html);
     $('.chat-area-footer').find('input, select, textarea, button').prop('disabled', false);
     document.querySelector("#text_input").value='';

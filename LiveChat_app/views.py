@@ -359,16 +359,15 @@ def upload_files_from_chat(request):
         files_len=0
         for file in fileInput:
             format_file=file.name.split(".")[1]
-
             if format_file in ['jpg','png','jpeg','heic']:
                 file_type="img"
-            if format_file in ['doc','docx']:
+            elif format_file in ['doc','docx']:
                 file_type="word"
-            if format_file in ['xls','xlsm']:
+            elif format_file in ['xls','xlsm']:
                 file_type="excel" 
-            if format_file in ['pdf']:
+            elif format_file in ['pdf']:
                 file_type="pdf" 
-            if format_file in ['gif']:
+            elif format_file in ['gif']:
                 file_type="gif" 
             else:
                 file_type=format_file

@@ -80,7 +80,7 @@ class chat_msg(models.Model):
     chat_date = models.DateTimeField(default=timezone.now)
 
     contain_txt = models.BooleanField(default=False)
-    chat = models.TextField()
+    chat = models.TextField(blank=True, null=True)
     
     contain_file = models.BooleanField(default=False)
     contain_files = models.BooleanField(default=False)

@@ -72,8 +72,10 @@
                                 {% endfor %}
                             {% endif %}
                         {% endif %}
-
-                      <div class="chat-msg-text">{{ chat.chat }}</div>
+                      {% if chat.contain_txt %}
+                        <div class="chat-msg-text">{{ chat.chat }}</div>
+                      {% endif %}
+                      
                     </div>
                       
                       

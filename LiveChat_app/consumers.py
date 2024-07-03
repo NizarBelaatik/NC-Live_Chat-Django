@@ -164,7 +164,6 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
         files=[]
         if files_len and files_len>0:
             files = await get_file_data(chat_box_id,chat_files_id)
-            print('\n\n files',files)
 
         
         #print(f'\n\n\n\n\n {chat_msg_data.chat_files_id } \n\n\n\n')
@@ -180,7 +179,6 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
                        'files':files},
                      'user':user_}
                     )
-        print(F'\n\n html {html}\n\n')
         
         await self.send(text_data = json.dumps({'html':html}))
 

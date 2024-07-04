@@ -84,8 +84,63 @@
                 {% endfor %}
     </div>
 
+<style>
+  .popup {
+    display: none;
+    position: fixed;
+    z-index: 100000000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
 
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#previewContainer img,
+#previewContainer a {
+    display: block;
+    margin: 10px 0;
+}
+
+#previewContainer img {
+    max-width: 100px;
+}
+</style>
     <div class="chat-area-footer">
+      <div id="popupBox" class="popup">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <h2>Previews</h2>
+            <div id="previewContainer">
+                <!-- Previews will be inserted here -->
+            </div>
+        </div>
+    </div>
       <form class="chat-area-footer-form" method="POST" onsubmit="return false">
         {% csrf_token %}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
@@ -96,7 +151,7 @@
           <circle cx="12" cy="12" r="10" />
           <path d="M12 8v8M8 12h8" /></svg>
 
-          
+        <a class="a_btn"><i class="bx bxs-face bx-sm "></i></a>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-paperclip">
           <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
         
@@ -104,10 +159,67 @@
           <a class="a_btn"><i class="fa fa-paperclip" ></i></a>
         </label>
         <input type="file" multiple  id="file-input" style="display: none;"></input>
-      
-        <a class="a_btn"><i class="bx bxs-face bx-sm "></i></a>
+        
         <input type="text" id="text_input"  placeholder="Type something here..."  onsubmit="sendMessage('{{box_ID}}')" />
+        
+        <script>$('#file-input').change(function(){
+          var fi=$('#file-input').prop('files');
+          var files=[];
+          console.log(fi);
+          for(var i=0; i<fi.length;i++){
+            console.log(fi[i].name);
+            files[i]=fi[i].name;
+            
+          }
+          console.log(fi);
+          console.log('fil',files);
+          
+          popupBox.style.display = 'block';
+          displayPreviews(fileInput.files);
 
+        })
+        </script>
+
+        <script>const openPopupBtn = document.getElementById('openPopupBtn');
+          const popupBox = document.getElementById('popupBox');
+          const closeBtn = document.querySelector('.close');
+          const fileInput = document.getElementById('file-input');
+          const previewContainer = document.getElementById('previewContainer');
+      
+          
+          
+      
+          window.addEventListener('click', (event) => {
+              if (event.target === popupBox) {
+                  popupBox.style.display = 'none';
+                  clearPreviews();
+              }
+          });
+      
+          function displayPreviews(files) {
+              clearPreviews();
+              Array.from(files).forEach(file => {
+                  if (file.type.startsWith('image/')) {
+                      const reader = new FileReader();
+                      reader.onload = (e) => {
+                          const img = document.createElement('img');
+                          img.src = e.target.result;
+                          previewContainer.appendChild(img);
+                      };
+                      reader.readAsDataURL(file);
+                  } else {
+                      const link = document.createElement('a');
+                      link.href = URL.createObjectURL(file);
+                      link.textContent = file.name;
+                      link.target = '_blank';
+                      previewContainer.appendChild(link);
+                  }
+              });
+          }
+      
+          function clearPreviews() {
+              previewContainer.innerHTML = '';
+          }</script>
         <a class="a_btn " id="sendMessage" onclick="sendMessage('{{box_ID}}')"><i class="bx bx-send bx-sm btn"></i></a>
 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up">

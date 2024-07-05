@@ -102,49 +102,50 @@ class ChatConsumer(AsyncWebsocketConsumer):#AsyncWebsocketConsumer  WebsocketCon
         user = self.scope['user']
 
         if user.is_authenticated:
-            obj_user = await get_user_object(email)
-            user_profile_pic = getattr(obj_user, "profile_pic")
+            if (message and message !="")  or ( files_len>0 ):
+                obj_user = await get_user_object(email)
+                user_profile_pic = getattr(obj_user, "profile_pic")
 
-            chat_msg_id = await check_id_in_model(chat_msg,'chat_msg_id')
-            chat_box_id = text_data_json["chat_box_id"]
+                chat_msg_id = await check_id_in_model(chat_msg,'chat_msg_id')
+                chat_box_id = text_data_json["chat_box_id"]
 
-            contain_txt = False
-            contain_file = False
-            contain_files = False
-            if message and message !="" :
-                contain_txt = True
-            if files_len==1:
-                contain_file = True
-            elif files_len>1:
-                contain_files = True
+                contain_txt = False
+                contain_file = False
+                contain_files = False
+                if message and message !="" :
+                    contain_txt = True
+                if files_len==1:
+                    contain_file = True
+                elif files_len>1:
+                    contain_files = True
+                    
+
+                await create_new_message(chat_msg_id, chat_box_id, email,contain_txt, message, contain_file,contain_files , chat_files_id)
+
+                #msg_data= await get_msg_object(chat_msg,chat_msg_id,chat_box_id)
+
+                # Render message asynchronously
                 
 
-            await create_new_message(chat_msg_id, chat_box_id, email,contain_txt, message, contain_file,contain_files , chat_files_id)
-
-            #msg_data= await get_msg_object(chat_msg,chat_msg_id,chat_box_id)
-
-            # Render message asynchronously
-            
-
-            chat_msg_data={'chat':message,
-                       'user':email,
-                       'sender_profile_pic':user_profile_pic}
-            
-            await self.channel_layer.group_send(
-                    self.roomGroupName,{
-                        "type" : "sendMessage" ,
-                        "email":email,
-                        "userProfilePic":user_profile_pic,
-                        "message":message ,
-                        'chat_box_id':chat_box_id,
-                        'chat_msg_id':chat_msg_id,
-                        'contain_txt':contain_txt,
-                        'contain_file':contain_file,
-                        'contain_files':contain_files,
-                        'chat_files_id':chat_files_id,
-                        'files_len':files_len
-                        
-                    })
+                chat_msg_data={'chat':message,
+                        'user':email,
+                        'sender_profile_pic':user_profile_pic}
+                
+                await self.channel_layer.group_send(
+                        self.roomGroupName,{
+                            "type" : "sendMessage" ,
+                            "email":email,
+                            "userProfilePic":user_profile_pic,
+                            "message":message ,
+                            'chat_box_id':chat_box_id,
+                            'chat_msg_id':chat_msg_id,
+                            'contain_txt':contain_txt,
+                            'contain_file':contain_file,
+                            'contain_files':contain_files,
+                            'chat_files_id':chat_files_id,
+                            'files_len':files_len
+                            
+                        })
         
 
 

@@ -1,7 +1,7 @@
 <div class="detail-area-top-header">
 
     <div class="detail-area-close-btn">
-        <a class="cursor_pointer" onclick="close_details_area()"><i class="bx bx-x bx-md"></i></a>
+        <a class="cursor_pointer function_btn" onclick="close_details_area()"><i class="bx bx-x bx-md"></i></a>
     </div>
 </div>
 
@@ -57,7 +57,7 @@
     <div class="detail-photo-grid">
         {% for image in shared_image  %}
             {% if image %}
-                <img src="image.url" />
+                <img src="{{image.file.url}}" />
             {% endif %}
         {% endfor %}
     </div>

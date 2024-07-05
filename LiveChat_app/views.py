@@ -280,6 +280,7 @@ def open_conv(request):
                         'chat_box_id':chats_data.chat_box_id,
                         'box_ID':box_ID,
                     }, safe=False)
+                
         except:
             return JsonResponse({'status': 'error',
                         'code':403,

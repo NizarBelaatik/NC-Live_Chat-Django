@@ -2,7 +2,7 @@
 
 function open_conv(chat_box_id,elem){
     const chat_area = document.querySelector('.chat-area');
-    
+    close_details_area();
     var chatMainArea = $('#chat_main_area_id');
     var chatHeaderArea = $('#chat_header_area_id');
 
@@ -138,6 +138,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // You can customize and expand these functions based on your specific requirements.
 
 });
+
+
 
 
 

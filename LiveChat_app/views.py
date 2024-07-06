@@ -116,6 +116,7 @@ def open_chat_area(request):
         try:
             chats_data = Chats_BOX.objects.get(chat_box_id=chat_box_id)
             check_user = getattr(chats_data,'chats_users')
+            
             if(user_L.email in check_user or user_L.email in check_user.split()):
                 
                 chat_msg_D = chat_msg.objects.filter(chat_box_id=chat_box_id).order_by('chat_date')
@@ -155,12 +156,16 @@ def open_chat_area(request):
                     else:
                         files=[{'file_check':False}]
                         
-                    sender_profile = USER.objects.get(email=cmd.user)
-                    if getattr(sender_profile,'profile_pic'):
+                    
+                    
+                    
+                    try:
+                        sender_profile = USER.objects.get(email=cmd.user)
                         sender_profile_pic = getattr(sender_profile,'profile_pic')
-                    else:
+                    except:
                         sender_profile_pic=''
-
+                    
+                    
                     chat_msg_data+=[{
                         'chat_msg_id':cmd.chat_msg_id,
                         'chat_box_id':cmd.chat_box_id,
@@ -179,7 +184,7 @@ def open_chat_area(request):
 
                     },]
 
-
+                    
 
 
                 other_user_email=''
@@ -187,6 +192,7 @@ def open_chat_area(request):
                     if not chats__users == user_L.email:
                         other_user_email = chats__users
 
+                
                 # get data of the conversation
                 if not chats_data.grp :
                     try:
@@ -201,16 +207,18 @@ def open_chat_area(request):
                     img =chats_data.img
                     title=chats_data.title
 
+                
                 cd = {
                         'chat_box_id':chats_data.chat_box_id,
                         'title':title,
                         'chats_users':chats_data.chats_users,
-                        'img':img.url,
+                        'img':img,
                         'grp':chats_data.grp,
                         'last_msg':chats_data.last_msg,
                         'last_msg_time':chats_data.last_msg_time,
                     }
 
+                
                 box_ID= chats_data.chat_box_id
     
                 html = render_to_string('html/chat_box/chat_area.html', {
@@ -224,15 +232,8 @@ def open_chat_area(request):
                                     'description':'',
                                     'html':html,
                                     }, safe=False)
-                return JsonResponse({'status': 'success',
-                        'code':201,
-                        'description':'',
-                        'chat_msg_data':chat_msg_data,
-                        'cd':cd,
-                        'chat_box_id':chats_data.chat_box_id,
-                        'box_ID':box_ID,
-                    }, safe=False)
-                
+
+            
         except:
             return JsonResponse({'status': 'error',
                         'code':403,
@@ -336,13 +337,24 @@ def create_chat(request):
             chats_users=chats_users,
             grp=False,
         )
+        chat_msg.objects.create(
+            chat_msg_id='f{chat_box_id}_msg_01',
+            chat_box_id=chat_box_id,
+            user='system_01',
+            contain_txt=True,
+            chat='first msg',
 
+            contain_file=False,
+            contain_files=False,
+        )
         return JsonResponse({
                     'code':201,
                     'description':'',
                     'chat_box_id': chat_box_id})
     JsonResponse({'status': 'error',
                         'code':400})
+    
+    
 @login_required
 def load_details_area(request):
     user_L=request.user

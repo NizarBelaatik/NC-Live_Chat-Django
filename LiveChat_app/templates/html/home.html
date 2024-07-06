@@ -46,7 +46,13 @@
       
     </script>
 </head>
-<body onload="load_conv_areaD()">
+<script>
+  
+  function load_conv_areaD(email){
+    open_chat_area(email);
+  }
+</script>
+<body onload="load_conv_areaD('C1ktLHb2Fu')">
 
   <div style="">
     <div class="app">
@@ -96,21 +102,23 @@
           
           <div class="conv-area-search-output">
             <div class="c-a-s-o-container">
-
-              <div class="c-a-s-o"  onclick="open_chat_area('{{Profile.chat_box_id}}',this)">
-                {% if Profile.img %}
-                <img class="c-a-s-o-profile" src="{{ Profile.img.url }}" alt="" />
-                {% else %}
-                <i class="c-a-s-o-profile bx bx-user bx-lg"></i>
-                {% endif %}
-                <div class="c-a-s-o-detail" >
-                  <div class="c-a-s-o-username">{{Profile.title}} user</div>
-                  <div class="c-a-s-o-content">
-                    <span class="c-a-s-o-message">about...</span>
+              <form method="POST">
+                {% csrf_token %}
+                <div class="c-a-s-o"  >
+                  {% if Profile.img %}
+                  <img class="c-a-s-o-profile" src="{{ Profile.img.url }}" alt="" />
+                  {% else %}
+                  <i class="c-a-s-o-profile bx bx-user bx-lg"></i>
+                  {% endif %}
+                  <div class="c-a-s-o-detail" >
+                    <div class="c-a-s-o-username">{{Profile.title}} user</div>
+                    <div class="c-a-s-o-content">
+                      <span class="c-a-s-o-message">about...</span>
+                    </div>
                   </div>
+                  <a class="c-a-s-o-create-chat" onclick="create_chat('{{Profile.email}}')"><i class="bx bx-message-rounded-add "></i></a>
                 </div>
-                <a class="c-a-s-o-create-chat" onclick="create_chat('{{Profile.email}}')"><i class="bx bx-message-rounded-add "></i></a>
-            </div>
+            </form>
             </div>
           </div>
           <button class="add" onclick="load_add_conv()"></button>

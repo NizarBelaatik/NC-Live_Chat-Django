@@ -12,76 +12,77 @@
     </div>
     <div class="chat-area-main" id="chat_main_area_id" style="overflow-y: auto;display: flex;flex-direction: column;overflow-y: auto; height:100%!important; width: 100%!important; flex-direction: column-reverse;">
         {% for chat in chat_msg_data %}
-                  
-                  <div class="chat-msg {% if user.email == chat.user %} owner {% endif %}">
-                    {% if not user.email == chat.user %}
-                      {% if not forloop.last %}
-                        {% with next_item=chat_msg_data|prev_elem_in_for:forloop.counter0 %}
-                            {% if not next_item.user == chat.user %}
-                                <div class="chat-msg-profile">
-                                  <img class="chat-msg-img" src="{{ chat.sender_profile_pic.url }}" alt="" />
-                                  <div class="chat-msg-date">{{ chat.chat_date }}</div>
-                                </div>
-                            {% else %}
-                              <div class="chat-msg-profile">
-                                <div class="chat-msg-date">{{ chat.chat_date }}</div>
-                              </div>
-                            {% endif %}
-                        {% endwith %}
+          {% if not chat.user == 'system_01' %}
+            <div class="chat-msg {% if user.email == chat.user %} owner {% endif %}">
+              {% if not user.email == chat.user %}
+                {% if not forloop.last %}
+                  {% with next_item=chat_msg_data|prev_elem_in_for:forloop.counter0 %}
+                      {% if not next_item.user == chat.user %}
+                          <div class="chat-msg-profile">
+                            <img class="chat-msg-img" src="{{ chat.sender_profile_pic.url }}" alt="" />
+                            <div class="chat-msg-date">{{ chat.chat_date }}</div>
+                          </div>
                       {% else %}
                         <div class="chat-msg-profile">
-                          <img class="chat-msg-img" src="{{ user.profile_pic.url }}" alt="" />
                           <div class="chat-msg-date">{{ chat.chat_date }}</div>
                         </div>
                       {% endif %}
-                    {% endif %}
-                    <div class="chat-msg-content">
-                      
-                        {% if chat.files.file_check %}
-                                <div class="chat-msg-text">
-                                    {% if F.file_type == "excel" %}
-                                        <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-excel-2-line fp_icon" ></i></a>
-                                    {% elif F.file_type == "pdf" %}
-                                        <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-pdf fp_icon" ></i></a>
-                                    {% elif chat.files.file_type == "img" or  chat.files.file_type == "gif" %}
-                                        <a class="nav-link nav-icon show" href="{{ chat.files.file.url }}" download><img src="{{  chat.files.file.url }}" alt="Image" ></a>
-                                    {% elif F.file_type == "word" %}
-                                        <a class="nav-link nav-icon show" href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-word fp_icon" ></i></a>
-                                    {% else %}
-                                        <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-line fp_icon" ></i></a>
-                                    {% endif %}
-                                </div>
-                            {% else %}
-                            <script>console.log()</script>
-                            {% if chat.contain_files %}
-                            
-                                {% for F in chat.files %}
-                                    <div class="chat-msg-text">
-                                        {% if F.file_type == "excel" %}
-                                            <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-excel-2-line fp_icon" ></i></a>
-                                        {% elif F.file_type == "pdf" %}
-                                            <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-pdf fp_icon" ></i></a>
-                                        {% elif F.file_type == "img" or  F.file_type == "gif" %}
-                                            <a class="nav-link nav-icon show" href="{{F.file.url }}" download><img src="{{  F.file.url }}" alt="Image" ></a>
-                                        {% elif F.file_type == "word" %}
-                                            <a class="nav-link nav-icon show" href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-word fp_icon" ></i></a>
-                                        {% else %}
-                                            <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-line fp_icon" ></i></a>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                        {% endif %}
-                      {% if chat.contain_txt %}
-                        <div class="chat-msg-text">{{ chat.chat }}</div>
-                      {% endif %}
-                      
-                    </div>
-                      
-                      
-                      
+                  {% endwith %}
+                {% else %}
+                  <div class="chat-msg-profile">
+                    <img class="chat-msg-img" src="{{ user.profile_pic.url }}" alt="" />
+                    <div class="chat-msg-date">{{ chat.chat_date }}</div>
                   </div>
-                {% endfor %}
+                {% endif %}
+              {% endif %}
+              <div class="chat-msg-content">
+                
+                  {% if chat.files.file_check %}
+                          <div class="chat-msg-text">
+                              {% if F.file_type == "excel" %}
+                                  <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-excel-2-line fp_icon" ></i></a>
+                              {% elif F.file_type == "pdf" %}
+                                  <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-pdf fp_icon" ></i></a>
+                              {% elif chat.files.file_type == "img" or  chat.files.file_type == "gif" %}
+                                  <a class="nav-link nav-icon show" href="{{ chat.files.file.url }}" download><img src="{{  chat.files.file.url }}" alt="Image" ></a>
+                              {% elif F.file_type == "word" %}
+                                  <a class="nav-link nav-icon show" href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-word fp_icon" ></i></a>
+                              {% else %}
+                                  <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-line fp_icon" ></i></a>
+                              {% endif %}
+                          </div>
+                      {% else %}
+                      <script>console.log()</script>
+                      {% if chat.contain_files %}
+                      
+                          {% for F in chat.files %}
+                              <div class="chat-msg-text">
+                                  {% if F.file_type == "excel" %}
+                                      <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-excel-2-line fp_icon" ></i></a>
+                                  {% elif F.file_type == "pdf" %}
+                                      <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-pdf fp_icon" ></i></a>
+                                  {% elif F.file_type == "img" or  F.file_type == "gif" %}
+                                      <a class="nav-link nav-icon show" href="{{F.file.url }}" download><img src="{{  F.file.url }}" alt="Image" ></a>
+                                  {% elif F.file_type == "word" %}
+                                      <a class="nav-link nav-icon show" href="{{ F.file_save.url }}" download><i class="bi bi-file-earmark-word fp_icon" ></i></a>
+                                  {% else %}
+                                      <a class="nav-link nav-icon show"  href="{{ F.file_save.url }}" download><i class="ri-file-line fp_icon" ></i></a>
+                                  {% endif %}
+                              </div>
+                          {% endfor %}
+                      {% endif %}
+                  {% endif %}
+                {% if chat.contain_txt %}
+                  <div class="chat-msg-text">{{ chat.chat }}</div>
+                {% endif %}
+                
+              </div>
+                
+                
+                
+            </div>
+          {% endif %}
+        {% endfor %}
     </div>
 
 

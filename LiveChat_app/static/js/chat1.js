@@ -19,6 +19,7 @@ function open_chat_area(chat_box_id,elem){
     if(elem){
         elem.classList.add("active");
     }
+
     var formData = new FormData();
     formData.append('chat_box_id', chat_box_id);
 
@@ -81,6 +82,7 @@ function open_details_area(box_ID){
     });
 }
 function close_details_area(){
+    
     $('#detail-area').html('');
     $('#detail-area').css('display','none');
 }
@@ -103,12 +105,19 @@ function load_add_conv(){
 }
 
 function create_chat(email){
+    var formData = new FormData();
+    var csrfToken = $("[name=csrfmiddlewaretoken]").val();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+    formData.append('email', email);
     $.ajax({
         url: "/create-chat/",
         type: "POST",
-        data:{'email':email},
-        dataType: "json",
+        data:formData,
+        processData: false, 
+        contentType: false,
         success: function(data){
+            console.log('code 111',data.code);
+            console.log('chat_box_id 111',data.chat_box_id);
             open_chat_area(data.chat_box_id)
         },
         

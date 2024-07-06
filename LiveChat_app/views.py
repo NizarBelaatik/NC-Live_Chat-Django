@@ -101,58 +101,10 @@ def HOME(request):
     chat_msg_data = chat_msg.objects.all()
     chats_data = Chats_BOX.objects.all()
 
-    Chats_Data=[]
-    for cd in chats_data:
-        chats_users= cd.chats_users
-
-        other_user_email=Get_Other_User_Email(user_L,chats_users)
-        
-            
-
-
-        if not cd.grp :
-            try:
-                other_user_data = USER.objects.get(email=other_user_email)
-                img = getattr(other_user_data,'profile_pic')
-                firstname = getattr(other_user_data,'firstname')
-                lastname = getattr(other_user_data,'lastname')
-                username = getattr(other_user_data,'username')
-                title=username
-            except:
-                img = ''
-                title =''
-        else:
-            img =cd.img
-            title=cd.title
-
-        last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')
-        if len(last_msg_Data)>0:
-            
-            last_msg=last_msg_Data[0].chat
-            last_msg_time=last_msg_Data[0].chat_date
-        else:
-            last_msg=''
-            last_msg_time=cd.box_created_date
-
-        Chats_Data+=[{
-                'chat_box_id':cd.chat_box_id,
-                'title':title,
-                'chats_users':cd.chats_users,
-                'img':img,
-                'grp':cd.grp,
-                'last_msg':last_msg,
-                'last_msg_time':last_msg_time,
-            }]
-        
-    #Chats_Data.sort(key=lambda x: x['last_msg_time'], reverse=True)
-    Chats_Data_sorted = sorted(Chats_Data, key=lambda x: x['last_msg_time'], reverse=True)
-
-
-    return render(request,'html/home.html',{'chat_msg_data':chat_msg_data,
-                                            'chats_data':Chats_Data_sorted,})
+    return render(request,'html/home.html',{'chat_msg_data':chat_msg_data,})
 
 @login_required
-def open_conv(request):
+def open_chat_area(request):
 
     user_L=request.user
     user={'email':user_L.email,
@@ -292,7 +244,84 @@ def open_conv(request):
                         'code':400})
 
     
+@login_required
+def load_conv_area(request):
+    user_L=request.user
+    if request.method == "GET": #request.is_ajax():
+        #chat_box_id =request.GET.get('chat_box_id')
 
+        chats_data = Chats_BOX.objects.all()
+        Chats_Data=[]
+        for cd in chats_data:
+            chats_users= cd.chats_users
+
+            other_user_email=Get_Other_User_Email(user_L,chats_users)
+
+            if not cd.grp :
+                try:
+                    other_user_data = USER.objects.get(email=other_user_email)
+                    img = getattr(other_user_data,'profile_pic')
+                    username = getattr(other_user_data,'username')
+                    title=username
+                except:
+                    img = ''
+                    title =''
+            else:
+                img =cd.img
+                title=cd.title
+
+            last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')
+            if len(last_msg_Data)>0:
+                
+                last_msg=last_msg_Data[0].chat
+                last_msg_time=last_msg_Data[0].chat_date
+            else:
+                last_msg=''
+                last_msg_time=cd.box_created_date
+
+            Chats_Data+=[{
+                    'chat_box_id':cd.chat_box_id,
+                    'title':title,
+                    'chats_users':cd.chats_users,
+                    'img':img,
+                    'grp':cd.grp,
+                    'last_msg':last_msg,
+                    'last_msg_time':last_msg_time,
+                }]
+            
+        #Chats_Data.sort(key=lambda x: x['last_msg_time'], reverse=True)
+        Chats_Data_sorted = sorted(Chats_Data, key=lambda x: x['last_msg_time'], reverse=True)
+
+
+        html = render_to_string('html/chat_box/load_conv_area.html', {
+                        'chats_data':Chats_Data_sorted}, 
+                        request=request)
+        return JsonResponse({
+                    'code':201,
+                    'description':'',
+                    'html': html})
+    
+    JsonResponse({'status': 'error',
+                        'code':400})
+
+
+@login_required
+def add_conv(request):
+    user_L=request.user
+    if request.method == "GET": #request.is_ajax():
+        #chat_box_id =request.GET.get('chat_box_id')
+
+        Chats_Data_sorted=''
+        html = render_to_string('html/chat_box/add_conv.html', {'chats_data':Chats_Data_sorted}, 
+                        request=request)
+        
+
+        return JsonResponse({
+                    'code':201,
+                    'description':'',
+                    'html': html})
+    JsonResponse({'status': 'error',
+                        'code':400})
 @login_required
 def load_details_area(request):
     user_L=request.user
@@ -397,6 +426,8 @@ def upload_files_from_chat(request):
 
 
 
+
+
 def generate_random_string(length):
     characters = string.ascii_letters + string.digits  # You can customize this for your needs
     random_string = ''.join(random.choice(characters) for _ in range(length))
@@ -412,6 +443,8 @@ def check_id_in_model(Object,column,id=generate_random_string(10)):
         if  len(obj)==0 :
             return id
         id = generate_random_string(10)
+
+
 
 def custom_timesince(value):
     if not isinstance(value, datetime):

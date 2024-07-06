@@ -1,6 +1,6 @@
 
 
-function open_conv(chat_box_id,elem){
+function open_chat_area(chat_box_id,elem){
     const chat_area = document.querySelector('.chat-area');
     close_details_area();
     var chatMainArea = $('#chat_main_area_id');
@@ -45,7 +45,21 @@ function open_conv(chat_box_id,elem){
     })
 }
 
-
+function load_conv_area(){
+    console.log('START ');
+    $.ajax({
+        url: '/load-conv-area/',
+        type: 'GET',
+        data:{},
+        dataType: "json",
+        success: function(data) {
+            console.log('code ',data.code);
+            if(data.code == 201){
+                $('#conversation-area').html(data.html);
+            }
+        }
+    })
+}
 
 function open_details_area(box_ID){
     $.ajax({
@@ -69,8 +83,25 @@ function close_details_area(){
     $('#detail-area').css('display','none');
 }
 function add_conv(){
-    
+
+    $.ajax({
+        url: "/add-conv/",
+        type: "GET",
+        data:{'chat_box_id':box_ID},
+        dataType: "json",
+        success: function(data){
+            $('#detail-area').css('display','block');
+            $('#detail-area').html(data.html);
+        },
+        
+    });
+
+
+    $('#conversation-area').html('');
 }
+
+
+
 
 
 document.addEventListener('DOMContentLoaded', function () {

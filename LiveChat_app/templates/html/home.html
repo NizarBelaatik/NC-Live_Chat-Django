@@ -46,7 +46,7 @@
       
     </script>
 </head>
-<body>
+<body onload="load_conv_areaD()">
 
   <div style="">
     <div class="app">
@@ -80,30 +80,64 @@
 
       <div class="wrapper">
 
-        <div class="conversation-area">
+        <div class="conversation-area" id='conversation-area' >
+          <div class='conv-area-search'>
+            <input type="text" placeholder="Search...">
+            <a class="conv-area-search-btn"><i class="bx bx-search bx-lg"></i></a>
+          </div>
 
-          {% for chats in chats_data %}
-            <div class="msg  online "  onclick="open_conv('{{chats.chat_box_id}}',this)">
-              {% if chats.img %}
-                <img class="msg-profile" src="{{ chats.img.url }}" alt="" />
-              {% else %}
-                <i class="msg-profile bx bx-user"></i>
-              {% endif %}
+          <style>
+            .s010 form .inner-form .basic-search {
+              box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .15);
+              overflow: hidden;
+              border-radius: 34px;
+              margin-bottom: 5px;
+          }
+             .input-field input {
+              height: 100%;
+              border: 0;
+              display: block;
+              width: 100%;
+              padding: 10px 32px 10px 70px;
+              font-size: 18px;
+              height: 70px;
+              color: #fff;
+              background: linear-gradient(to right, #2c6dd5 0%, #2c6dd5 28%, #ff4b5a 91%, #ff4b5a 100%);
+              font-family: lato, sans-serif;
+          }
 
-              <div class="msg-detail" >
-                <div class="msg-username">{{chats.title}}</div>
-                <div class="msg-content">
-                <span class="msg-message">{{chats.last_msg}}</span>
-                <span class="msg-date">{{ chats.last_msg_time|custom_timesince  }}
-                </span>
-                </div>
+          .s010 form .inner-form .basic-search .input-field .icon-wrap {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            width: 60px;
+            height: 100%;
+        }
+        .s010 form .inner-form .basic-search .input-field .icon-wrap svg {
+          width: 34px;
+          height: 34px;
+          fill: #fff;
+      }
+          </style>
+          <div class='conv-area-search basic-search'>
+            <div class="input-field">
+              <input id="search" type="text" placeholder="Type Keywords">
+              <div class="icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+              </svg>
               </div>
             </div>
-          {% endfor %}
-
-
-          <button class="add" onclick="add_conv()"></button>
-          <div class="overlay"></div>
+          </div>
+          
+          <div class="conv-area-search-output">
+            
+          </div>
+          
         </div>
 
 

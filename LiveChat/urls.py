@@ -19,7 +19,7 @@ from django.urls import path
 
 from django.conf import settings
 from django.conf.urls.static import static
-from LiveChat_app.views import HOME ,open_conv,load_details_area,upload_files_from_chat
+from LiveChat_app.views import HOME ,open_chat_area,load_conv_area,add_conv,load_details_area,upload_files_from_chat
 from LiveChat_app.views import  LoginU,Login, SignUP,SignupU 
 
 urlpatterns = [
@@ -32,7 +32,9 @@ urlpatterns = [
 
     path('home/', HOME ,name="home"),
 
-    path('open-conv/',open_conv,name="open-conv"),
+    path('open-conv/',open_chat_area,name="open-conv"),
+    path('load-conv-area/',load_conv_area,name="load-conv-area"),
+    path('add-conv/',add_conv,name='add-conv'),
     path('load-details-area/',load_details_area,name="load-details-area"),
     path('upload-files-from-chat/',upload_files_from_chat,name="upload-files-from-chat"),
 ]

@@ -72,16 +72,11 @@ function sendMessage(chat_box_id){
             contentType: false,
     
             success: function(data) {
-                console.log(data.code);
                 if(data.code == 201){
-                    console.log()
                     chat_files_id = data.chat_data.chat_files_id;
                     files_len = data.chat_data.files_len;
-                    console.log(chat_files_id)
-                    console.log(files_len)
                     //var chatData = JSON.parse(data.chat_msg_data);
 
-                    console.log('chat_files_id is ',chat_files_id);
                     chatSocket.send(JSON.stringify({ 
                         'message': messageInput, 
                         'email' : USER_email,

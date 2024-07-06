@@ -1,0 +1,26 @@
+{% load static %}
+{% load costum_tags %}
+{% load humanize %}
+
+{% for chats in chats_data %}
+    <div class="msg  online "  onclick="open_chat_area('{{chats.chat_box_id}}',this)">
+        {% if chats.img %}
+        <img class="msg-profile" src="{{ chats.img.url }}" alt="" />
+        {% else %}
+        <i class="msg-profile bx bx-user"></i>
+        {% endif %}
+
+        <div class="msg-detail" >
+        <div class="msg-username">{{chats.title}}</div>
+        <div class="msg-content">
+        <span class="msg-message">{{chats.last_msg}}</span>
+        <span class="msg-date">{{ chats.last_msg_time|custom_timesince  }}
+        </span>
+        </div>
+        </div>
+    </div>
+{% endfor %}
+
+
+<button class="add" onclick="add_conv()"></button>
+<div class="overlay"></div>

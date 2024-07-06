@@ -16,8 +16,9 @@ function open_chat_area(chat_box_id,elem){
         }
     })
 
-
-    elem.classList.add("active");
+    if(elem){
+        elem.classList.add("active");
+    }
     var formData = new FormData();
     formData.append('chat_box_id', chat_box_id);
 
@@ -46,7 +47,6 @@ function open_chat_area(chat_box_id,elem){
 }
 
 function load_conv_area(){
-    console.log('START ');
     $.ajax({
         url: '/load-conv-area/',
         type: 'GET',
@@ -60,7 +60,9 @@ function load_conv_area(){
         }
     })
 }
+function onchange_input_CAS(){
 
+}
 function open_details_area(box_ID){
     $.ajax({
         url: "/load-details-area/",
@@ -82,12 +84,12 @@ function close_details_area(){
     $('#detail-area').html('');
     $('#detail-area').css('display','none');
 }
-function add_conv(){
+function load_add_conv(){
 
     $.ajax({
         url: "/add-conv/",
         type: "GET",
-        data:{'chat_box_id':box_ID},
+        data:{'chat_box_id':'box_ID'},
         dataType: "json",
         success: function(data){
             $('#detail-area').css('display','block');
@@ -100,7 +102,18 @@ function add_conv(){
     $('#conversation-area').html('');
 }
 
-
+function create_chat(email){
+    $.ajax({
+        url: "/create-chat/",
+        type: "POST",
+        data:{'email':email},
+        dataType: "json",
+        success: function(data){
+            open_chat_area(data.chat_box_id)
+        },
+        
+    });
+}
 
 
 

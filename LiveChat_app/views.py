@@ -20,7 +20,7 @@ import string
 
 
 
-\
+
 
 def Login(request):
     return render(request,'html/login.html')
@@ -306,13 +306,13 @@ def load_conv_area(request):
 
 
 @login_required
-def add_conv(request):
+def load_add_conv(request):
     user_L=request.user
     if request.method == "GET": #request.is_ajax():
         #chat_box_id =request.GET.get('chat_box_id')
 
         Chats_Data_sorted=''
-        html = render_to_string('html/chat_box/add_conv.html', {'chats_data':Chats_Data_sorted}, 
+        html = render_to_string('html/chat_box/load_add_conv.html', {'chats_data':Chats_Data_sorted}, 
                         request=request)
         
 
@@ -320,6 +320,27 @@ def add_conv(request):
                     'code':201,
                     'description':'',
                     'html': html})
+    JsonResponse({'status': 'error',
+                        'code':400})
+     
+@login_required
+def create_chat(request):
+    user_L=request.user
+    if request.method == "POST": #request.is_ajax():
+        add_user_email =request.POST.get('email')
+        
+        chat_box_id=check_id_in_model(Chats_BOX,'chat_box_id')
+        chats_users=f'{user_L.email} {add_user_email}' 
+        Chats_BOX.objects.create(
+            chat_box_id=chat_box_id,
+            chats_users=chats_users,
+            grp=False,
+        )
+
+        return JsonResponse({
+                    'code':201,
+                    'description':'',
+                    'chat_box_id': chat_box_id})
     JsonResponse({'status': 'error',
                         'code':400})
 @login_required
@@ -443,6 +464,7 @@ def check_id_in_model(Object,column,id=generate_random_string(10)):
         if  len(obj)==0 :
             return id
         id = generate_random_string(10)
+
 
 
 

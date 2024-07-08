@@ -7,7 +7,11 @@
 
 <div class="detail-area-header">
     <div class="msg-profile group">
-        <img class="msg-profile" src="{{img.url}}" alt="" />
+        {% if img %}
+        <img class="msg-profile" src="{{ img.url }}" alt="" />
+        {% else %}
+        <i class="msg-profile bx bx-user bx-lg detail-area-PROFILE-PIC"></i>
+        {% endif %}
     </div>
     <div class="detail-title">{{title}}</div>
     <div class="detail-subtitle">Created by Aysenur, 1 May 2020</div>

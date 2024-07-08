@@ -323,6 +323,11 @@ html {
   object-fit: cover;
   margin-right: 15px;
 }
+.msg-profile:has(.detail-area-PROFILE-PIC),
+.detail-area-PROFILE-PIC{
+  margin-bottom: 0!important;
+  text-align: center!important;
+}
 .msg-profile.group {
   display: flex;
   justify-content: center;

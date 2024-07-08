@@ -4,7 +4,12 @@
 
 <div class="chat-area" id="chat-area-{{ box_ID }}">
     <div class="chat-area-header" id="chat_header_area_id">
-        <img class="msg-profile" src="{{Chats_BOX.img}}" alt="" />
+        
+        {% if Chats_BOX.img %}
+        <img class="msg-profile" src="{{ Chats_BOX.img.url }}" alt="" />
+        {% else %}
+        <i class="msg-profile bx bx-user bx-lg"></i>
+        {% endif %}
         <div class="chat-area-title">{{Chats_BOX.title}}</div>
         <div class="chat-area-group">
             <a class="cursor_pointer function_btn" onclick="open_details_area('{{box_ID}}')"><i class="bx bx-cog bx-md"></i></a>
@@ -16,7 +21,7 @@
             <div class="chat-msg {% if user.email == chat.user %} owner {% endif %}">
               {% if not user.email == chat.user %}
                 {% if not forloop.last %}
-                  {% with next_item=chat_msg_data|prev_elem_in_for:forloop.counter0 %}
+                  {% with next_item=chat_msg_data|next_elem_in_for:forloop.counter0 %}
                       {% if not next_item.user == chat.user %}
                           <div class="chat-msg-profile">
                             <img class="chat-msg-img" src="{{ chat.sender_profile_pic.url }}" alt="" />
@@ -35,6 +40,7 @@
                   </div>
                 {% endif %}
               {% endif %}
+              
               <div class="chat-msg-content">
                 
                   {% if chat.files.file_check %}
@@ -114,14 +120,16 @@
     </div>
 </div>
 
-<script>$('#file-input').change(function(){
+<script>
+  
+$('#file-input').change(function(){
   var fi=$('#file-input').prop('files');
   displayPreviews(fi);
 })
 
-const popup_File = document.querySelector('.popup_File');
+var popup_File = document.querySelector('.popup_File');
 var popup_File_id = document.getElementById('popup_File_id');
-const closeBtn = document.querySelector('.close');
+var closeBtn = document.querySelector('.close');
 //const fileInput = document.getElementById('file-input');
 //const previewContainer = document.getElementById('previewContainer');
 
@@ -172,7 +180,6 @@ function popup_File_close(){
 function clearPopup_File(){
   $('.popup_File').html('<a class="popup_File_close function_btn" onclick="popup_File_close()"><i class="bx bx-x bx-sm"></i></a>');
 }
-
 </script>
 <script>var input = document.getElementById("text_input");
   input.addEventListener("keypress", function(event) {

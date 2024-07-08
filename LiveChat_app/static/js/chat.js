@@ -1,36 +1,40 @@
-$("#text_input").submit(function(){
-    $("#sendMessage").click();
 
+
+
+ chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
+
+
+// Initialize chatSocket when the page loads or when needed
+window.addEventListener('load', function() {
+    chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
+
+    // Handle connection open event
+    chatSocket.onopen = function(event) {
+        console.log("WebSocket is open now.");
+    };
+
+    // Handle connection error event
+    chatSocket.onerror = function(error) {
+        console.log("WebSocket error: ", error);
+    };
+
+    // Handle connection close event
+    chatSocket.onclose = function(event) {
+        console.log("WebSocket is closed now.");
+    };
+
+    // Handle messages received from the server
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const html = data['html'];
+        $("#chat_main_area_id").prepend(html);
+        $('.chat-area-footer').find('input, select, textarea, button').prop('disabled', false);
+        document.querySelector("#text_input").value='';
+    };
+    
 });
-var input = document.getElementById("text_input");
-input.addEventListener("keypress", function(event) {
-    // If the user presses the "Enter" key on the keyboard
-    if (event.key === "Enter") {
-        $("#sendMessage").click();
-    }
-  });
-
-function keypressInBox(){
-    $("#sendMessage").click();
-
-}
 
 
-const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
-
-
-
-chatSocket.onmessage = function (e) {
-    const data = JSON.parse(e.data);
-    const html = data['html'];
-    console.log('html   ',html);
-    $("#chat_main_area_id").prepend(html);
-    $('.chat-area-footer').find('input, select, textarea, button').prop('disabled', false);
-    document.querySelector("#text_input").value='';
-};
-
-chatSocket.onclose = function(e) {
-};
 
 // Send message to server
 
@@ -60,7 +64,7 @@ function sendMessage(chat_box_id){
 
         formData.append('contain_txt', contain_txt);
 
-        $('.chat-area-footer').find('input, select, textarea, button').prop('disabled', true);
+        //$('.chat-area-footer').find('input, select, textarea, button').prop('disabled', true);
         $.ajax({
     
             url: '/upload-files-from-chat/',
@@ -86,11 +90,14 @@ function sendMessage(chat_box_id){
                         //'userProfilePic':String(userProfilePic),
 
                     }));
+
+                    popup_File_close();
                 }
             }
         })
     }
     else{
+        
         chatSocket.send(JSON.stringify({ 
             'message': messageInput, 
             'email' : USER_email,

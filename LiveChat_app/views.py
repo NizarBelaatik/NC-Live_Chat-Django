@@ -204,7 +204,7 @@ def open_chat_area(request):
                         img = ''
                         title =''
                 else:
-                    img =chats_data.img
+                    img =chats_data
                     title=chats_data.title
 
                 
@@ -424,7 +424,6 @@ def load_details_area(request):
 @login_required
 def upload_files_from_chat(request):
     user_L=request.user
-    print('here111111')
     if request.method == "POST": #request.is_ajax():
         chat_box_id =request.POST.get('chat_box_id')
         #fileInput =request.FILES['fileInput']
@@ -434,7 +433,6 @@ def upload_files_from_chat(request):
         chat_file_id = check_id_in_model(chat_file,'chat_file_id')
         files_len=0
         for file in fileInput:
-            print('\nformat_file',file)
             format_file=file.name.split(".")[1]
             if format_file in ['jpg','png','jpeg','heic']:
                 file_type="img"
@@ -462,7 +460,6 @@ def upload_files_from_chat(request):
             
         chat_data={'chat_files_id':chat_file_id,
                    'files_len':files_len}
-        print('here22222')
         return JsonResponse({
                         'code':201,
                         'description':'' ,

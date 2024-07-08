@@ -1,4 +1,20 @@
 
+$("#text_input").submit(function(){
+    $("#sendMessage").click();
+
+});
+
+$("#text_input").addEventListener("keypress", function(event) {
+    // If the user presses the "Enter" key on the keyboard
+    if (event.key === "Enter") {
+        $("#sendMessage").click();
+    }
+  });
+
+function keypressInBox(){
+    $("#sendMessage").click();
+
+}
 
 function open_chat_area(chat_box_id,elem){
     const chat_area = document.querySelector('.chat-area');
@@ -36,7 +52,6 @@ function open_chat_area(chat_box_id,elem){
 
         success: function(data) {
             var new_chat_area="";
-            console.log('code',data.code);
             if(data.code == 201){
                 $('#chat-area').html(data.html);
                 
@@ -54,7 +69,6 @@ function load_conv_area(){
         data:{},
         dataType: "json",
         success: function(data) {
-            console.log('code ',data.code);
             if(data.code == 201){
                 $('#conversation-area').html(data.html);
             }
@@ -196,3 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
+  

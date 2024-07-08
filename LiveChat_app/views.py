@@ -254,42 +254,46 @@ def load_conv_area(request):
         chats_data = Chats_BOX.objects.all()
         Chats_Data=[]
         for cd in chats_data:
-            chats_users= cd.chats_users
-
-            other_user_email=Get_Other_User_Email(user_L,chats_users)
-
-            if not cd.grp :
-                try:
-                    other_user_data = USER.objects.get(email=other_user_email)
-                    img = getattr(other_user_data,'profile_pic')
-                    username = getattr(other_user_data,'username')
-                    title=username
-                except:
-                    img = ''
-                    title =''
-            else:
-                img =cd.img
-                title=cd.title
-
-            last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')
-            if len(last_msg_Data)>0:
-                
-                last_msg=last_msg_Data[0].chat
-                last_msg_time=last_msg_Data[0].chat_date
-            else:
-                last_msg=''
-                last_msg_time=cd.box_created_date
-
-            Chats_Data+=[{
-                    'chat_box_id':cd.chat_box_id,
-                    'title':title,
-                    'chats_users':cd.chats_users,
-                    'img':img,
-                    'grp':cd.grp,
-                    'last_msg':last_msg,
-                    'last_msg_time':last_msg_time,
-                }]
             
+            check_user = cd.chats_users
+            
+            if(user_L.email in check_user or user_L.email in check_user.split()):
+                chats_users= cd.chats_users
+
+                other_user_email=Get_Other_User_Email(user_L,chats_users)
+
+                if not cd.grp :
+                    try:
+                        other_user_data = USER.objects.get(email=other_user_email)
+                        img = getattr(other_user_data,'profile_pic')
+                        username = getattr(other_user_data,'username')
+                        title=username
+                    except:
+                        img = ''
+                        title =''
+                else:
+                    img =cd.img
+                    title=cd.title
+
+                last_msg_Data = chat_msg.objects.filter(chat_box_id=cd.chat_box_id).order_by('-chat_date')
+                if len(last_msg_Data)>0:
+                    
+                    last_msg=last_msg_Data[0].chat
+                    last_msg_time=last_msg_Data[0].chat_date
+                else:
+                    last_msg=''
+                    last_msg_time=cd.box_created_date
+
+                Chats_Data+=[{
+                        'chat_box_id':cd.chat_box_id,
+                        'title':title,
+                        'chats_users':cd.chats_users,
+                        'img':img,
+                        'grp':cd.grp,
+                        'last_msg':last_msg,
+                        'last_msg_time':last_msg_time,
+                    }]
+                
         #Chats_Data.sort(key=lambda x: x['last_msg_time'], reverse=True)
         Chats_Data_sorted = sorted(Chats_Data, key=lambda x: x['last_msg_time'], reverse=True)
 

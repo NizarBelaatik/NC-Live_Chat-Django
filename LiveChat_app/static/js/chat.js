@@ -91,7 +91,6 @@ function sendMessage(chat_box_id){
         })
     }
     else{
-        console.log('chat_files_id is is is is ',chat_files_id);
         chatSocket.send(JSON.stringify({ 
             'message': messageInput, 
             'email' : USER_email,

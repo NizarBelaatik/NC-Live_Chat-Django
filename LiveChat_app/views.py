@@ -18,7 +18,7 @@ import logging
 import random
 import string
 
-
+from collections import Counter
 
 
 
@@ -329,9 +329,21 @@ def create_chat(request):
     user_L=request.user
     if request.method == "POST": #request.is_ajax():
         add_user_email =request.POST.get('email')
-        
-        chat_box_id=check_id_in_model(Chats_BOX,'chat_box_id')
         chats_users=f'{user_L.email} {add_user_email}' 
+        C_U_list=chats_users.split()
+        get_Chats_BOX_users=Chats_BOX.objects.all()
+        for u in get_Chats_BOX_users:
+            cu=u.chats_users
+            if Counter(cu.split()) == Counter(C_U_list):
+                c_b_id=u.chat_box_id
+                return JsonResponse({'status': 'error',
+                        'code':201,
+                        'description':'Conversation already existed',
+                        'chat_box_id':c_b_id}, safe=False)
+
+
+        chat_box_id=check_id_in_model(Chats_BOX,'chat_box_id')
+        
         Chats_BOX.objects.create(
             chat_box_id=chat_box_id,
             chats_users=chats_users,
@@ -412,6 +424,7 @@ def load_details_area(request):
 @login_required
 def upload_files_from_chat(request):
     user_L=request.user
+    print('here111111')
     if request.method == "POST": #request.is_ajax():
         chat_box_id =request.POST.get('chat_box_id')
         #fileInput =request.FILES['fileInput']
@@ -421,6 +434,7 @@ def upload_files_from_chat(request):
         chat_file_id = check_id_in_model(chat_file,'chat_file_id')
         files_len=0
         for file in fileInput:
+            print('\nformat_file',file)
             format_file=file.name.split(".")[1]
             if format_file in ['jpg','png','jpeg','heic']:
                 file_type="img"
@@ -445,8 +459,10 @@ def upload_files_from_chat(request):
                 user=user_L.email
                 ) 
             files_len+=1
+            
         chat_data={'chat_files_id':chat_file_id,
                    'files_len':files_len}
+        print('here22222')
         return JsonResponse({
                         'code':201,
                         'description':'' ,

@@ -77,7 +77,8 @@
                 </div>
 
                 <div class="media-options">
-                    <a href="#" class="field google">
+                    {% load socialaccount %}
+                    <a href="{% provider_login_url 'google' %}" class="field google">
                         <img src="#" alt="" class="google-img">
                         <span>Login with Google</span>
                     </a>

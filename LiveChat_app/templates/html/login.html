@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="media-options">
-                    <a href="#" class="field google">
+                    <a href="{% url 'account_login' %}?next={{ request.path }}" class="field google">
                       <i class='bx bxl-google google-icon'></i>
                         <span>Login with Google</span>
                     </a>

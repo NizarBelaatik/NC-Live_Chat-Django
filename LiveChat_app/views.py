@@ -18,6 +18,9 @@ import logging
 import random
 import string
 
+import os
+from PIL import Image
+
 from collections import Counter
 
 
@@ -438,17 +441,14 @@ def upload_files_from_chat(request):
         files_len=0
         for file in fileInput:
             format_file=file.name.split(".")[1]
-            if format_file in ['jpg','png','jpeg','heic']:
-                file_type="img"
-            elif format_file in ['doc','docx']:
-                file_type="word"
-            elif format_file in ['xls','xlsm']:
-                file_type="excel" 
-            elif format_file in ['pdf']:
-                file_type="pdf" 
-            elif format_file in ['gif']:
-                file_type="gif" 
-            else:
+
+            try:
+                with Image.open(file) as img:
+                    img.verify()
+                    file_type='img'
+                    print('img')
+            except (IOError, SyntaxError):
+                print('not img')
                 file_type=format_file
 
             files_id = check_id_in_model(chat_file,'files_id')

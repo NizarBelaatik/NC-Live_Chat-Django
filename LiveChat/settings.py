@@ -37,12 +37,21 @@ INSTALLED_APPS = [
     'daphne',
     'channels',
 
+    
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    
     
     'django.contrib.humanize',
 ]
@@ -55,7 +64,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+
 ]
+
+
+
+
+
 
 ROOT_URLCONF = 'LiveChat.urls'
 
@@ -146,3 +162,50 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+AUTHENTICATION_BACKENDS = [
+    
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/home'
+LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# Social account settings (add your Google credentials here)
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '123456789012-abcde12345fghij6789klmnop012345.apps.googleusercontent.com',
+            'secret': 'GOCSPX-abcdefg1234567890abcdefg1234',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        #'AUTH_PARAMS': {'access_type': 'online',}
+    }
+}
+
+
+#SOCIALACCOUNT_PROVIDERS = {
+#    'google': {
+#        'APP': {
+#            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+#            'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+#            'key': ''
+#        }
+#    }
+#}
+# set the environment variables in shell or environment configuration
+#export GOOGLE_CLIENT_ID='your-google-client-id.apps.googleusercontent.com'
+#export GOOGLE_CLIENT_SECRET='your-google-client-secret'

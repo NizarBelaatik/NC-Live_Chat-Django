@@ -1,0 +1,24 @@
+{% load static %}
+{% load costum_tags %}
+{% load humanize %}
+
+<form method="GET" >
+    {% csrf_token %}
+    {% for Profile in Profiles %}
+        <div class="c-a-s-o"  >
+            {% if not Profile.profile_pic == '' %}
+            <img class="c-a-s-o-profile " src="/media/{{ Profile.profile_pic }}" alt="" />
+            {% else %}
+            <i class="c-a-s-o-profile bx bx-user bx-lg"></i>
+            {% endif %}
+
+            <div class="c-a-s-o-detail" >
+            <div class="c-a-s-o-username">{{Profile.title}}</div>
+            <div class="c-a-s-o-content">
+                <span class="c-a-s-o-message"></span>
+            </div>
+            </div>
+            <a class="c-a-s-o-create-chat" onclick="create_chat('{{Profile.email}}')"><i class="bx bx-message-rounded-add "></i></a>
+        </div>
+    {% endfor %}
+</form>

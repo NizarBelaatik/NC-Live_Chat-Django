@@ -92,6 +92,7 @@ function sendMessage(chat_box_id){
                     }));
 
                     popup_File_close();
+                    load_conv_area();
                 }
             }
         })
@@ -107,6 +108,7 @@ function sendMessage(chat_box_id){
             //'userProfilePic':String(userProfilePic),
     
         }));
+        load_conv_area();
     }
 
     

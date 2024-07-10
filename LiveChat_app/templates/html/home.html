@@ -54,7 +54,7 @@
   }
 </script>
 
-<body onload="load_conv_areaD('C1ktLHb2Fu')">
+<body onload="load_conv_area()">
 
   <div style="">
     <div class="app">
@@ -93,41 +93,9 @@
       <div class="wrapper">
 
         <div class="conversation-area" id='conversation-area' >
-          <div class='conv-area-navig'>
-            <a class="conv-area-search-btn c-a-n-show" onclick="load_conv_area()"><i class="bx bx-left-arrow-alt bx-lg"></i>Conversation</a>
-            <a class="conv-area-search-btn c-a-n-hide" onclick="">Search<i class="bx bx-right-arrow-alt bx-lg"></i></a>
-          </div>
-
-          <div class='conv-area-search'>
-            <input type="text" id="input-conv-area-search" onchange="onchange_input_CAS()" placeholder="Search...">
-            <a class="conv-area-search-btn"><i class="bx bx-search bx-lg"></i></a>
-          </div>
-
-        
-        
-          
-          <div class="conv-area-search-output">
-            <div class="c-a-s-o-container">
-              <form method="POST">
-                {% csrf_token %}
-                <div class="c-a-s-o"  >
-                  {% if Profile.img %}
-                  <img class="c-a-s-o-profile" src="{{ Profile.img.url }}" alt="" />
-                  {% else %}
-                  <i class="c-a-s-o-profile bx bx-user bx-lg"></i>
-                  {% endif %}
-                  <div class="c-a-s-o-detail" >
-                    <div class="c-a-s-o-username">{{Profile.title}} user</div>
-                    <div class="c-a-s-o-content">
-                      <span class="c-a-s-o-message">about...</span>
-                    </div>
-                  </div>
-                  <a class="c-a-s-o-create-chat" onclick="create_chat('{{Profile.email}}')"><i class="bx bx-message-rounded-add "></i></a>
-                </div>
-            </form>
-            </div>
-          </div>
-          <button class="add" onclick="load_add_conv()"></button>
+          <!-- START CHAT AREA -->
+          <!-- START CHAT AREA -->
+          <!-- START CHAT AREA -->
         </div>
 
 

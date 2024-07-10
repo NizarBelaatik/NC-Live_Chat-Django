@@ -107,7 +107,7 @@
         </label>
         <input type="file" multiple  id="file-input" style="display: none;"></input>
         
-        <input type="text" id="text_input"  placeholder="Type something here..."  onsubmit="sendMessage('{{box_ID}}')" />
+        <input type="text" id="text_input"  placeholder="Type something here..."  onchange="sendMessage('{{box_ID}}')" />
         
         <script>
         </script>
@@ -181,12 +181,3 @@ function clearPopup_File(){
   $('.popup_File').html('<a class="popup_File_close function_btn" onclick="popup_File_close()"><i class="bx bx-x bx-sm"></i></a>');
 }
 </script>
-<script>var input = document.getElementById("text_input");
-  input.addEventListener("keypress", function(event) {
-      // If the user presses the "Enter" key on the keyboard
-      
-      if (event.key === "Enter") {
-          $("#sendMessage").click();
-      }
-    });
-  </script>

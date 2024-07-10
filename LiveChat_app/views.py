@@ -332,6 +332,38 @@ def load_add_conv(request):
                         'code':400})
      
 @login_required
+def load_Profile_search(request):
+    user_L=request.user
+    if request.method == "GET": #request.is_ajax():
+        search_key_word =request.GET.get('search_key_word')
+        search_data=USER.objects.values_list('email', 'username','profile_pic','username')
+        Profiles=[]
+        for S_D in search_data:
+
+            
+            email=S_D[0]
+            username=S_D[1]
+            profile_pic=S_D[2]
+            print('\nemail',email)
+            print('profile_pic',profile_pic)
+            title=S_D[3]
+            if search_key_word in str(email) :
+                Profiles.append({'email':email,'username':username,'profile_pic':profile_pic,'title':title})
+                
+
+        Chats_Data_sorted=''
+        html = render_to_string('html/chat_box/load_Profile_search.html', {'Profiles':Profiles}, 
+                        request=request)
+        
+
+        return JsonResponse({
+                    'code':201,
+                    'description':'',
+                    'html': html})
+    JsonResponse({'status': 'error',
+                        'code':400})
+
+@login_required
 def create_chat(request):
     user_L=request.user
     if request.method == "POST": #request.is_ajax():

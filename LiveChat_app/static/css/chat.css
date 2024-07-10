@@ -270,7 +270,14 @@ html {
   background-color: var(--msg-hover-bg);
 }
 
-
+.c-a-s-o-profile{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;}
+  
+  
 .c-a-s-o-username {
   text-transform: capitalize;
   margin-bottom: 4px;

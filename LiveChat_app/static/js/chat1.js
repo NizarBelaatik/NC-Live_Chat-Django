@@ -1,20 +1,17 @@
 
 $("#text_input").submit(function(){
-    $("#sendMessage").click();
+    
 
 });
 
 $("#text_input").addEventListener("keypress", function(event) {
     // If the user presses the "Enter" key on the keyboard
     if (event.key === "Enter") {
-        $("#sendMessage").click();
+        
     }
   });
 
-function keypressInBox(){
-    $("#sendMessage").click();
 
-}
 
 function open_chat_area(chat_box_id,elem){
     const chat_area = document.querySelector('.chat-area');
@@ -75,9 +72,7 @@ function load_conv_area(){
         }
     })
 }
-function onchange_input_CAS(){
 
-}
 function open_details_area(box_ID){
     $.ajax({
         url: "/load-details-area/",
@@ -100,23 +95,37 @@ function close_details_area(){
     $('#detail-area').html('');
     $('#detail-area').css('display','none');
 }
-function load_add_conv(){
 
+function load_add_conv(){
+    id="conv-area-search-output"
     $.ajax({
         url: "/add-conv/",
         type: "GET",
         data:{'chat_box_id':'box_ID'},
         dataType: "json",
         success: function(data){
-            $('#detail-area').css('display','block');
-            $('#detail-area').html(data.html);
+            $('#conversation-area').html(data.html);
         },
         
     });
-
-
-    $('#conversation-area').html('');
 }
+
+
+
+function onchange_input_CAS(){
+    var search_key_word=$('#input-conv-area-search').val();
+    $.ajax({
+        url: "/load-Profile-search/",
+        type: "GET",
+        data:{'search_key_word':search_key_word},
+        dataType: "json",
+        success: function(data){
+            $('#load_Profile_search').html(data.html);
+        },
+        
+    });
+}
+
 
 function create_chat(email){
     var formData = new FormData();
@@ -130,81 +139,11 @@ function create_chat(email){
         processData: false, 
         contentType: false,
         success: function(data){
-            console.log('code 111',data.code);
-            console.log('chat_box_id 111',data.chat_box_id);
             open_chat_area(data.chat_box_id)
         },
         
     });
 }
-
-
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    const popupOverlay = document.getElementById('popupOverlay');
-
-    const popup = document.getElementById('popup');
-
-    const closePopup = document.getElementById('closePopup');
-
-    const emailInput = document.getElementById('emailInput');
-
-    // Function to open the popup
-
-    function openPopup() {
-
-        popupOverlay.style.display = 'block';
-
-    }
-
-    // Function to close the popup
-
-    function closePopupFunc() {
-
-        popupOverlay.style.display = 'none';
-
-    }
-
-    // Function to submit the signup form
-
-    function submitForm() {
-
-        const email = emailInput.value;
-
-        // Add your form submission logic here
-
-        console.log(`Email submitted: ${email}`);
-
-        closePopupFunc(); // Close the popup after form submission
-
-    }
-
-    // Event listeners
-
-    // Trigger the popup to open (you can call this function on a button click or any other event)
-
-    openPopup();
-
-    // Close the popup when the close button is clicked
-
-    closePopup.addEventListener('click', closePopupFunc);
-
-    // Close the popup when clicking outside the popup content
-
-    popupOverlay.addEventListener('click', function (event) {
-
-        if (event.target === popupOverlay) {
-
-            closePopupFunc();
-
-        }
-
-    });
-
-    // You can customize and expand these functions based on your specific requirements.
-
-});
 
 
 
